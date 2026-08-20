@@ -1,3 +1,1 @@
-# Google AdSense Authorized Digital Sellers (ads.txt) for Sardev AI
-# Ganti pub-XXXXXXXXXXXXXXXX dengan ID Publisher Google AdSense Boss (contoh: pub-1234567890123456)
-google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+google.com, pub-5002398653709535, DIRECT, f08c47fec0942fa0
