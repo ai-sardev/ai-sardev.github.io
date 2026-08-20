@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kontak Kami - Sardev AI Chatbot</title>
+  <meta name="description" content="Hubungi tim pengelola Sardev AI dan Muhamad Satria untuk pertanyaan, dukungan teknis, saran, atau kolaborasi.">
+  <link rel="canonical" href="https://ai-sardev.github.io/contact.html">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="token.css">
+  <style>
+    :root, html[data-theme="light"] {
+      --bg-app: #ffffff; --panel-bg: #f5f5f7; --text-main: #1d1d1f; --text-sub: #86868b;
+      --accent-blue: #0071e3; --border-color: #d2d2d7; --card-bg: #ffffff;
+    }
+    html[data-theme="dark"] {
+      --bg-app: #000000; --panel-bg: #1c1c1e; --text-main: #f5f5f7; --text-sub: #98989d;
+      --accent-blue: #2997ff; --border-color: #38383a; --card-bg: #1c1c1e;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-app); color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
+      line-height: 1.6; padding: 0; margin: 0;
+    }
+    header {
+      padding: 16px 24px; background: var(--panel-bg); border-bottom: 1px solid var(--border-color);
+      display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100;
+    }
+    .logo { font-size: 18px; font-weight: 700; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+    .nav-links { display: flex; gap: 16px; align-items: center; }
+    .nav-links a { color: var(--text-sub); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent-blue); }
+    .container { max-width: 800px; margin: 40px auto; padding: 0 24px; }
+    h1 { font-size: 36px; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.5px; }
+    .subtitle { font-size: 18px; color: var(--text-sub); margin-bottom: 32px; }
+    .card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 32px; margin-bottom: 24px; }
+    h2 { font-size: 20px; font-weight: 600; margin-bottom: 12px; color: var(--accent-blue); }
+    p { margin-bottom: 16px; color: var(--text-main); font-size: 16px; }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; }
+    input, textarea {
+      width: 100%; padding: 12px 16px; border-radius: 10px; border: 1px solid var(--border-color);
+      background: var(--panel-bg); color: var(--text-main); font-family: inherit; font-size: 15px; outline: none;
+    }
+    input:focus, textarea:focus { border-color: var(--accent-blue); }
+    .btn-submit {
+      background: var(--accent-blue); color: #fff; border: none; padding: 12px 24px; border-radius: 10px;
+      font-size: 15px; font-weight: 600; cursor: pointer; transition: opacity 0.2s;
+    }
+    .btn-submit:hover { opacity: 0.9; }
+    footer { text-align: center; padding: 32px 24px; border-top: 1px solid var(--border-color); color: var(--text-sub); font-size: 13px; margin-top: 60px; }
+    footer a { color: var(--accent-blue); text-decoration: none; margin: 0 8px; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="logo">
+      <svg width="20" height="20" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#0071E3"/><path d="M16 6L18.5 13.5L26 16L18.5 18.5L16 26L13.5 18.5L6 16L13.5 13.5Z" fill="#FFF"/></svg>
+      Sardev AI
+    </a>
+    <nav class="nav-links">
+      <a href="index.html">Chatbot</a>
+      <a href="about.html">Tentang Kami</a>
+      <a href="contact.html" style="color:var(--accent-blue); font-weight:600;">Kontak</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>Hubungi Kami</h1>
+    <p class="subtitle">Kami senang mendengar dari Boss. Silakan kirimkan pertanyaan, saran, atau masukan.</p>
+
+    <div class="card">
+      <h2>Informasi Kontak Resmi</h2>
+      <p><strong>Pengelola Utama:</strong> Muhamad Satria</p>
+      <p><strong>Email Support:</strong> <a href="mailto:support@sardev.biz.id" style="color:var(--accent-blue);">support@sardev.biz.id</a></p>
+      <p><strong>Website Resmi:</strong> <a href="https://ai-sardev.github.io" style="color:var(--accent-blue);">https://ai-sardev.github.io</a></p>
+    </div>
+
+    <div class="card">
+      <h2>Kirim Pesan Langsung</h2>
+      <form onsubmit="event.preventDefault(); alert('Terima kasih, pesan Boss telah terkirim!'); this.reset();">
+        <div class="form-group">
+          <label for="name">Nama Lengkap</label>
+          <input type="text" id="name" required placeholder="Masukkan nama Boss...">
+        </div>
+        <div class="form-group">
+          <label for="email">Alamat Email</label>
+          <input type="email" id="email" required placeholder="nama@email.com">
+        </div>
+        <div class="form-group">
+          <label for="subject">Subjek Pesan</label>
+          <input type="text" id="subject" required placeholder="Topik atau pertanyaan...">
+        </div>
+        <div class="form-group">
+          <label for="message">Isi Pesan</label>
+          <textarea id="message" rows="5" required placeholder="Tuliskan pesan Boss di sini..."></textarea>
+        </div>
+        <button type="submit" class="btn-submit">Kirim Pesan</button>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Sardev AI. Dikelola oleh Muhamad Satria.</p>
+    <p style="margin-top:8px;">
+      <a href="privacy.html">Kebijakan Privasi</a> |
+      <a href="terms.html">Ketentuan Layanan</a> |
+      <a href="disclaimer.html">Penafian (Disclaimer)</a> |
+      <a href="contact.html">Kontak</a>
+    </p>
+  </footer>
+</body>
+</html>

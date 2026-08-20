@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pertanyaan Umum (FAQ) - Sardev AI Chatbot</title>
+  <meta name="description" content="Jawaban atas pertanyaan umum seputar cara kerja, analisis gambar, keamanan privasi, dan fitur Sardev AI Chatbot.">
+  <link rel="canonical" href="https://ai-sardev.github.io/faq.html">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="token.css">
+  <style>
+    :root, html[data-theme="light"] {
+      --bg-app: #ffffff; --panel-bg: #f5f5f7; --text-main: #1d1d1f; --text-sub: #86868b;
+      --accent-blue: #0071e3; --border-color: #d2d2d7; --card-bg: #ffffff;
+    }
+    html[data-theme="dark"] {
+      --bg-app: #000000; --panel-bg: #1c1c1e; --text-main: #f5f5f7; --text-sub: #98989d;
+      --accent-blue: #2997ff; --border-color: #38383a; --card-bg: #1c1c1e;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-app); color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
+      line-height: 1.6; padding: 0; margin: 0;
+    }
+    header {
+      padding: 16px 24px; background: var(--panel-bg); border-bottom: 1px solid var(--border-color);
+      display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100;
+    }
+    .logo { font-size: 18px; font-weight: 700; color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+    .nav-links { display: flex; gap: 16px; align-items: center; }
+    .nav-links a { color: var(--text-sub); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent-blue); }
+    .container { max-width: 800px; margin: 40px auto; padding: 0 24px; }
+    h1 { font-size: 36px; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.5px; }
+    .subtitle { font-size: 18px; color: var(--text-sub); margin-bottom: 32px; }
+    .card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 24px 32px; margin-bottom: 16px; }
+    h2 { font-size: 18px; font-weight: 600; margin-bottom: 8px; color: var(--text-main); }
+    p { color: var(--text-sub); font-size: 15px; }
+    footer { text-align: center; padding: 32px 24px; border-top: 1px solid var(--border-color); color: var(--text-sub); font-size: 13px; margin-top: 60px; }
+    footer a { color: var(--accent-blue); text-decoration: none; margin: 0 8px; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="logo">
+      <svg width="20" height="20" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#0071E3"/><path d="M16 6L18.5 13.5L26 16L18.5 18.5L16 26L13.5 18.5L6 16L13.5 13.5Z" fill="#FFF"/></svg>
+      Sardev AI
+    </a>
+    <nav class="nav-links">
+      <a href="index.html">Chatbot</a>
+      <a href="about.html">Tentang Kami</a>
+      <a href="contact.html">Kontak</a>
+      <a href="faq.html" style="color:var(--accent-blue); font-weight:600;">FAQ</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>Pertanyaan Umum (FAQ)</h1>
+    <p class="subtitle">Temukan jawaban atas pertanyaan yang sering diajukan seputar Sardev AI.</p>
+
+    <div class="card">
+      <h2>Apa itu Sardev AI Chatbot?</h2>
+      <p>Sardev AI adalah asisten kecerdasan buatan multimodal cerdas yang mampu merespons teks dan menganalisis gambar untuk membantu berbagai pekerjaan harian Anda.</p>
+    </div>
+
+    <div class="card">
+      <h2>Siapa pengembang dibalik Sardev AI?</h2>
+      <p>Sardev AI diciptakan dan dikembangkan secara independen oleh Muhamad Satria.</p>
+    </div>
+
+    <div class="card">
+      <h2>Apakah layanan ini gratis?</h2>
+      <p>Ya, layanan Sardev AI dapat digunakan secara gratis tanpa biaya pendaftaran.</p>
+    </div>
+
+    <div class="card">
+      <h2>Bagaimana cara menganalisis gambar?</h2>
+      <p>Tekan tombol ikon tambah (<b>+</b>) di area obrolan atau gunakan fitur paste (Ctrl+V) / drag and drop gambar, lalu kirimkan pertanyaan Anda.</p>
+    </div>
+
+    <div class="card">
+      <h2>Apakah riwayat pesan saya disimpan secara aman?</h2>
+      <p>Riwayat percakapan Anda disimpan secara lokal di browser perangkat Anda (localStorage) dan dapat dibersihkan kapan saja melalui tombol "Hapus Riwayat Chat".</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Sardev AI. Dikelola oleh Muhamad Satria.</p>
+    <p style="margin-top:8px;">
+      <a href="privacy.html">Kebijakan Privasi</a> |
+      <a href="terms.html">Ketentuan Layanan</a> |
+      <a href="disclaimer.html">Penafian (Disclaimer)</a> |
+      <a href="contact.html">Kontak</a>
+    </p>
+  </footer>
+</body>
+</html>
