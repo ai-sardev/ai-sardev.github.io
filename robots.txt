@@ -1,7 +1,13 @@
+# Aturan khusus WAJIB untuk bot Google AdSense
+User-agent: Mediapartners-Google
+Allow: /
+
+# Aturan untuk robot pencari umum (Googlebot, Bing, dll)
 User-agent: *
 Allow: /
 Disallow: /admin/
 Disallow: /storage/
 Disallow: /config/
 
+# Peta Situs
 Sitemap: https://ai-sardev.github.io/sitemap.xml
