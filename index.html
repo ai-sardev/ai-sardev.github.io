@@ -1,1287 +1,1497 @@
 <!DOCTYPE html>
 <html lang="id" data-theme="light">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sardev Studio - Script &amp; Prompt Generator</title>
-<link rel="stylesheet" href="token.css">
-<style>
-  :root, html[data-theme="light"] {
-    --bg-app: #ffffff;
-    --panel-bg: #f5f5f7;
-    --panel-bg-2: #ffffff;
-    --border-color: #d2d2d7;
-    --border-color-subtle: #e8e8ed;
-    --text-main: #1d1d1f;
-    --text-sub: #86868b;
-    --accent-blue: #0071e3;
-    --accent-blue-hover: #0077ed;
-    --accent-status: #34c759;
-    --accent-danger: #ff3b30;
-    --shadow-soft: 0 4px 16px rgba(0, 0, 0, 0.06);
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sardev AI Chatbot - Asisten AI Multimodal</title>
+  <meta name="description" content="Asisten Sardev AI multimodal berbasis tampilan ChatGPT dan estetika Apple. Jawab pertanyaan, analisis gambar, dan bantu berbagai kebutuhan Boss.">
+  <link rel="stylesheet" href="token.css">
+  <style>
+    :root,
+    html[data-theme="light"] {
+      --bg-app: #ffffff;
+      --panel-bg: #f5f5f7;
+      --panel-bg-2: #ffffff;
+      --border-color: #d2d2d7;
+      --border-color-subtle: #e8e8ed;
+      --text-main: #1d1d1f;
+      --text-sub: #86868b;
+      --accent-blue: #0071e3;
+      --accent-blue-hover: #0077ed;
+      --accent-status: #34c759;
+      --accent-danger: #ff3b30;
+      --shadow-soft: 0 4px 16px rgba(0, 0, 0, 0.06);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
 
-  html[data-theme="dark"] {
-    --bg-app: #000000;
-    --panel-bg: #1c1c1e;
-    --panel-bg-2: #2c2c2e;
-    --border-color: #38383a;
-    --border-color-subtle: #2c2c2e;
-    --text-main: #f5f5f7;
-    --text-sub: #98989d;
-    --accent-blue: #2997ff;
-    --accent-blue-hover: #47a5ff;
-    --accent-status: #30d158;
-    --accent-danger: #ff453a;
-    --shadow-soft: 0 4px 16px rgba(0, 0, 0, 0.3);
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-  }
+    html[data-theme="dark"] {
+      --bg-app: #000000;
+      --panel-bg: #1c1c1e;
+      --panel-bg-2: #2c2c2e;
+      --border-color: #38383a;
+      --border-color-subtle: #2c2c2e;
+      --text-main: #f5f5f7;
+      --text-sub: #98989d;
+      --accent-blue: #2997ff;
+      --accent-blue-hover: #47a5ff;
+      --accent-status: #30d158;
+      --accent-danger: #ff453a;
+      --shadow-soft: 0 4px 16px rgba(0, 0, 0, 0.3);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+    }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg-app);
-    color: var(--text-main);
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    min-height: 100vh;
-    -webkit-font-smoothing: antialiased;
-    transition: background 0.3s ease, color 0.3s ease;
-  }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  .app { display: flex; min-height: 100vh; width: 100vw; overflow-x: hidden; position: relative; }
-  @media (max-width: 900px) { .app { flex-direction: column; } }
+    body {
+      background: var(--bg-app);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
 
-  /* Collapsible Sidebar styling ala Apple macOS Studio */
-  .sidebar {
-    width: 340px;
-    flex-shrink: 0;
-    background: var(--panel-bg);
-    border-right: 1px solid var(--border-color);
-    padding: 24px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    transition: all 0.3s cubic-bezier(0.28, 0.11, 0.32, 1);
-    opacity: 1;
-    z-index: 10;
-  }
+    .app {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    @media (max-width: 900px) {
+      .app {
+        flex-direction: column;
+      }
+    }
+
+    /* Collapsible Sidebar */
+    .sidebar {
+      width: 320px;
+      flex-shrink: 0;
+      background: var(--panel-bg);
+      border-right: 1px solid var(--border-color);
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      z-index: 10;
+      transition: all 0.3s cubic-bezier(0.28, 0.11, 0.32, 1);
+      opacity: 1;
+    }
+
+    .app.sidebar-collapsed .sidebar {
+      width: 0;
+      padding: 0;
+      opacity: 0;
+      overflow: hidden;
+      border-right: none;
+    }
+
+    @media (max-width: 900px) {
+      .app {
+        flex-direction: column;
+        height: 100vh;
+      }
+
+      .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        height: auto;
+        padding: 12px 16px;
+        gap: 8px;
+      }
+
+      .app.sidebar-collapsed .sidebar {
+        height: 0;
+        padding: 0;
+        border-bottom: none;
+      }
+
+      .main-chat {
+        flex: 1;
+        height: 0;
+      }
+    }
+
+    .brand-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-danger);
+      box-shadow: 0 0 8px var(--accent-danger);
+    }
+
+    .brand-dot.idle {
+      animation: none;
+      opacity: 0.35;
+    }
+
+    .brand-dot.live {
+      animation: pulse 1.1s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.25;
+      }
+    }
+
+    .brand h1 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+      color: var(--text-main);
+    }
+
+    .brand span {
+      color: var(--text-sub);
+      font-size: 11px;
+      display: block;
+      letter-spacing: 0.02em;
+    }
+
+    /* Header Utility Buttons (Theme & Sidebar Toggle) */
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-card-sm, 10px);
+      border: 1px solid var(--border-color);
+      background: var(--panel-bg-2);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+
+    .icon-btn:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      transform: translateY(-1px);
+    }
+
+    /* Floating Open Sidebar Button */
+    .floating-sidebar-open {
+      display: none;
+      position: absolute;
+      top: 14px;
+      left: 20px;
+      z-index: 20;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .app.sidebar-collapsed .floating-sidebar-open {
+      display: flex;
+    }
+
+    /* Navigation Tabs */
+    .nav-tabs {
+      display: flex;
+      gap: 6px;
+      background: var(--panel-bg-2);
+      padding: 4px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+    }
+
+    .nav-tab {
+      flex: 1;
+      background: none;
+      border: none;
+      color: var(--text-sub);
+      padding: 8px 10px;
+      font-size: 12px;
+      font-weight: 500;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .nav-tab:hover {
+      color: var(--text-main);
+    }
+
+    .nav-tab.active {
+      background: var(--accent-blue);
+      color: #ffffff;
+      font-weight: 600;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .upload-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text-sub);
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .launch-btn {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--panel-bg-2);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      font-size: 12px;
+      font-weight: 500;
+      border-radius: 980px;
+      cursor: pointer;
+      text-align: left;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.15s ease;
+    }
+
+    .launch-btn:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      background: rgba(0, 113, 227, 0.04);
+    }
+
+    .launch-btn.danger-btn {
+      border-color: rgba(255, 59, 48, 0.3);
+      color: var(--accent-danger);
+    }
+
+    .launch-btn.danger-btn:hover {
+      background: rgba(255, 59, 48, 0.08);
+      border-color: var(--accent-danger);
+    }
+
+    /* Main Chat Area */
+    .main-chat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg-app);
+      position: relative;
+    }
+
+    .chat-header {
+      padding: 16px 24px;
+      padding-left: 24px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      background: var(--panel-bg);
+      gap: 4px;
+      flex-shrink: 0;
+      transition: padding-left 0.3s ease;
+    }
+
+    .app.sidebar-collapsed .chat-header {
+      padding-left: 64px;
+    }
+
+    .chat-header h2 {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chat-header span {
+      font-size: 12px;
+      color: var(--text-sub);
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background: var(--bg-app);
+      scroll-behavior: smooth;
+    }
+
+    /* Chat Bubbles */
+    .chat-row {
+      display: flex;
+      flex-direction: column;
+      max-width: 82%;
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    .chat-row.user {
+      align-self: flex-end;
+      align-items: flex-end;
+    }
+
+    .chat-row.ai {
+      align-self: flex-start;
+      align-items: flex-start;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .chat-avatar {
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text-sub);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chat-row.user .chat-avatar {
+      color: var(--accent-blue);
+    }
+
+    .chat-row.ai .chat-avatar {
+      color: var(--accent-status);
+    }
+
+    .chat-bubble {
+      padding: 14px 18px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.6;
+      word-break: break-word;
+    }
+
+    .chat-row.user .chat-bubble {
+      background: var(--accent-blue);
+      color: #ffffff;
+      border-top-right-radius: 4px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .chat-row.ai .chat-bubble {
+      background: var(--panel-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      border-top-left-radius: 4px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .chat-row.error .chat-bubble {
+      background: rgba(255, 59, 48, 0.08);
+      border: 1px solid rgba(255, 59, 48, 0.3);
+      color: var(--accent-danger);
+      font-size: 13px;
+    }
+
+    .chat-bubble strong {
+      color: inherit;
+      font-weight: 600;
+    }
+
+    .chat-bubble ul,
+    .chat-bubble ol {
+      margin: 8px 0;
+      padding-left: 20px;
+    }
+
+    .chat-bubble li {
+      margin-bottom: 4px;
+    }
+
+    .chat-bubble-imgs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .chat-bubble-img {
+      max-width: 220px;
+      max-height: 220px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 1px solid var(--border-color);
+    }
+
+    /* Input Area */
+    .chat-input-area {
+      border-top: 1px solid var(--border-color);
+      background: var(--panel-bg);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .chat-thumbs-container {
+      display: none;
+      gap: 10px;
+      padding: 14px 24px 0 24px;
+      flex-wrap: wrap;
+    }
+
+    .chat-thumb-item {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .chat-thumb-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .chat-thumb-remove {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      width: 18px;
+      height: 18px;
+      background: rgba(0, 0, 0, 0.7);
+      color: #ffffff;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .chat-input-wrap {
+      padding: 16px 24px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+    }
+
+    .chat-img-btn {
+      height: 46px;
+      width: 46px;
+      background: var(--panel-bg-2);
+      border: 1px solid var(--border-color);
+      color: var(--text-sub);
+      border-radius: 980px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+      outline: none;
+    }
+
+    .chat-img-btn:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+      background: rgba(0, 113, 227, 0.06);
+    }
+
+    .chat-input {
+      flex: 1;
+      min-height: 46px;
+      max-height: 140px;
+      background: var(--bg-app);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 12px 16px;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 14px;
+      resize: none;
+      outline: none;
+      line-height: 1.45;
+      transition: border-color 0.15s ease;
+    }
+
+    .chat-input:focus {
+      border-color: var(--accent-blue);
+    }
+
+    .chat-send-btn {
+      height: 46px;
+      padding: 0 24px;
+      background: var(--accent-blue);
+      color: #ffffff;
+      border: none;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 980px;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.1s ease;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .chat-send-btn:hover {
+      background: var(--accent-blue-hover);
+    }
+
+    .chat-send-btn:active {
+      transform: scale(0.98);
+    }
+
+    .chat-send-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .file-warning {
+      background: rgba(255, 159, 10, 0.1);
+      border-bottom: 1px solid rgba(255, 159, 10, 0.25);
+      color: #ff9f0a;
+      padding: 10px 24px;
+      font-size: 12px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+
+    ::-webkit-scrollbar {
+      width: 7px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 4px;
+    }
   
-  .app.sidebar-collapsed .sidebar {
-    width: 0;
-    padding: 0;
-    opacity: 0;
-    overflow: hidden;
-    border-right: none;
-  }
+    /* =========================================================
+       MOBILE RESPONSIVE FIX
+       - Sidebar off-canvas
+       - Sidebar hidden by default on mobile
+       - Full-width chat
+       - Compact mobile composer
+       ========================================================= */
+    @media (max-width: 900px) {
+      html,
+      body {
+        width: 100%;
+        height: 100dvh;
+        min-height: 100dvh;
+        overflow: hidden;
+      }
 
-  @media (max-width: 900px) {
-    .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border-color); }
-    .app.sidebar-collapsed .sidebar { height: 0; padding: 0; border-bottom: none; }
-  }
+      .app {
+        width: 100%;
+        height: 100dvh;
+        min-height: 100dvh;
+        flex-direction: row;
+        overflow: hidden;
+      }
 
-  .brand-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 4px;
-  }
-  .brand { display: flex; align-items: center; gap: 10px; }
-  .brand-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-danger); box-shadow: 0 0 8px var(--accent-danger); }
-  .brand-dot.idle { animation: none; opacity: 0.35; }
-  .brand-dot.live { animation: pulse 1.1s infinite; }
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: min(86vw, 320px);
+        height: 100dvh;
+        padding: 18px 16px;
+        gap: 14px;
+        border-right: 1px solid var(--border-color);
+        border-bottom: none;
+        overflow-y: auto;
+        overflow-x: hidden;
+        z-index: 1000;
+        opacity: 1;
+        transform: translateX(0);
+        box-shadow: 12px 0 36px rgba(0, 0, 0, 0.14);
+        transition:
+          transform 0.28s cubic-bezier(0.28, 0.11, 0.32, 1),
+          opacity 0.22s ease;
+        -webkit-overflow-scrolling: touch;
+      }
 
-  .brand h1 {
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: -0.015em;
-    color: var(--text-main);
-  }
-  .brand span {
-    color: var(--text-sub);
-    font-size: 11px;
-    display: block;
-    letter-spacing: 0.02em;
-    font-weight: 400;
-  }
+      .app.sidebar-collapsed .sidebar {
+        width: min(86vw, 320px);
+        height: 100dvh;
+        padding: 18px 16px;
+        border-right: 1px solid var(--border-color);
+        border-bottom: none;
+        opacity: 0;
+        transform: translateX(-105%);
+        pointer-events: none;
+      }
 
-  /* Header Utility Buttons (Theme & Sidebar Toggle) */
-  .icon-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: var(--radius-card-sm, 10px);
-    border: 1px solid var(--border-color);
-    background: var(--panel-bg-2);
-    color: var(--text-main);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    outline: none;
-  }
-  .icon-btn:hover {
-    border-color: var(--accent-blue);
-    color: var(--accent-blue);
-    transform: translateY(-1px);
-  }
+      .main-chat {
+        width: 100%;
+        min-width: 0;
+        height: 100dvh;
+        flex: 1 1 auto;
+      }
 
-  /* Floating Open Sidebar Button */
-  .floating-sidebar-open {
-    display: none;
-    position: absolute;
-    top: 18px;
-    left: 20px;
-    z-index: 20;
-    box-shadow: var(--shadow-sm);
-  }
-  .app.sidebar-collapsed .floating-sidebar-open { display: flex; }
+      .floating-sidebar-open {
+        position: fixed;
+        top: max(10px, env(safe-area-inset-top));
+        left: 12px;
+        width: 38px;
+        height: 38px;
+        z-index: 1100;
+        border-radius: 12px;
+      }
 
-  /* Navigation Tabs */
-  .nav-tabs {
-    display: flex;
-    gap: 6px;
-    background: var(--panel-bg-2);
-    padding: 4px;
-    border-radius: var(--radius-card-sm, 12px);
-    border: 1px solid var(--border-color);
-  }
-  .nav-tab {
-    flex: 1;
-    background: none;
-    border: none;
-    color: var(--text-sub);
-    padding: 8px 10px;
-    font-size: 12px;
-    font-weight: 500;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-align: center;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-  }
-  .nav-tab:hover { color: var(--text-main); }
-  .nav-tab.active {
-    background: var(--accent-blue);
-    color: #ffffff;
-    font-weight: 600;
-    box-shadow: var(--shadow-sm);
-  }
+      .chat-header,
+      .app.sidebar-collapsed .chat-header {
+        min-height: 64px;
+        padding: 11px 14px 11px 62px;
+        justify-content: center;
+        gap: 2px;
+      }
 
-  /* Upload Zone */
-  .upload-zone {
-    border: 1px dashed var(--border-color);
-    border-radius: var(--radius-card-sm, 12px);
-    padding: 16px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    background: var(--panel-bg-2);
-    display: block;
-  }
-  .upload-zone:hover { border-color: var(--accent-blue); background: rgba(0, 113, 227, 0.04); }
-  .upload-zone.filled { border-style: solid; border-color: var(--accent-blue); }
-  .upload-zone input { display: none; }
-  .upload-label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--text-sub);
-    display: block;
-    margin-bottom: 6px;
-  }
-  .upload-hint { font-size: 12px; color: var(--text-sub); line-height: 1.4; }
-  
-  .thumb-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
-  .thumb-item { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); }
-  .thumb-item img { width: 100%; height: 64px; object-fit: cover; display: block; }
-  .thumb-remove {
-    position: absolute;
-    top: 3px;
-    right: 3px;
-    width: 20px;
-    height: 20px;
-    background: rgba(0,0,0,0.7);
-    color: #ffffff;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(4px);
-    transition: background 0.15s ease;
-  }
-  .thumb-remove:hover { background: var(--accent-danger); }
+      .chat-header h2 {
+        font-size: 16px;
+        line-height: 1.25;
+      }
 
-  /* Mode Select Buttons */
-  .mode-select { display: flex; gap: 6px; }
-  .mode-btn {
-    flex: 1;
-    padding: 10px 8px;
-    background: var(--panel-bg-2);
-    border: 1px solid var(--border-color);
-    color: var(--text-sub);
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    border-radius: var(--radius-card-sm, 12px);
-    transition: all 0.2s ease;
-  }
-  .mode-btn:hover { color: var(--text-main); border-color: var(--accent-blue); }
-  .mode-btn.active {
-    border-color: var(--accent-blue);
-    color: var(--accent-blue);
-    background: rgba(0, 113, 227, 0.08);
-    font-weight: 600;
-  }
+      .chat-header span {
+        max-width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-size: 11px;
+      }
 
-  .engine-note {
-    font-size: 11px;
-    color: var(--text-sub);
-    line-height: 1.5;
-    background: var(--bg-app);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-card-sm, 12px);
-    padding: 10px 12px;
-  }
-  
-  .desc-input {
-    width: 100%;
-    background: var(--bg-app);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-card-sm, 12px);
-    padding: 10px 12px;
-    color: var(--text-main);
-    font-size: 13px;
-    font-family: inherit;
-    resize: vertical;
-    min-height: 70px;
-    outline: none;
-    transition: border-color 0.2s ease;
-  }
-  .desc-input:focus { border-color: var(--accent-blue); }
+      .chat-messages {
+        min-height: 0;
+        padding: 16px 12px;
+        gap: 14px;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+      }
 
-  /* Apple Style Pill Button */
-  .generate-btn {
-    background: var(--accent-blue);
-    color: #ffffff;
-    border: none;
-    padding: 14px;
-    font-weight: 600;
-    font-size: 14px;
-    letter-spacing: -0.01em;
-    border-radius: 980px;
-    cursor: pointer;
-    transition: background 0.2s ease, transform 0.1s ease;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    box-shadow: var(--shadow-sm);
-  }
-  .generate-btn:hover { background: var(--accent-blue-hover); }
-  .generate-btn:active { transform: scale(0.99); }
-  .generate-btn:disabled { background: var(--border-color); color: var(--text-sub); cursor: not-allowed; }
+      .chat-row {
+        max-width: 94%;
+      }
 
-  .log {
-    font-family: "SF Mono", ui-monospace, monospace;
-    font-size: 11px;
-    color: var(--text-sub);
-    border-top: 1px solid var(--border-color);
-    padding-top: 12px;
-    min-height: 40px;
-    line-height: 1.6;
-    flex: 1;
-  }
-  .log .ok { color: var(--accent-status); }
-  .log .err { color: var(--accent-danger); }
+      .chat-avatar {
+        margin-bottom: 5px;
+        font-size: 11px;
+      }
 
-  /* Main Workspace */
-  .main {
-    flex: 1;
-    padding: 40px 48px;
-    overflow-y: auto;
-    transition: padding 0.3s ease;
-  }
-  @media (max-width: 900px) { .main { padding: 24px; } }
+      .chat-bubble {
+        padding: 12px 14px;
+        border-radius: 16px;
+        font-size: 14px;
+        line-height: 1.55;
+        overflow-wrap: anywhere;
+      }
 
-  .empty-state {
-    height: 70vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: var(--text-sub);
-  }
-  .empty-state-icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 16px;
-    background: var(--panel-bg);
-    border: 1px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
-    color: var(--accent-blue);
-  }
-  .empty-state h2 {
-    font-size: 22px;
-    font-weight: 600;
-    letter-spacing: -0.015em;
-    color: var(--text-main);
-    margin-bottom: 8px;
-  }
-  .empty-state p { font-size: 14px; max-width: 360px; line-height: 1.5; color: var(--text-sub); }
+      .chat-bubble-imgs {
+        gap: 6px;
+      }
 
-  .plan-controls {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 24px;
-    padding: 12px 16px;
-    background: var(--panel-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 14px;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
-  
-  .plan-header {
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 24px;
-    margin-bottom: 28px;
-  }
-  .plan-eyebrow {
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    color: var(--accent-blue);
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-  .plan-title {
-    font-size: 32px;
-    font-weight: 700;
-    letter-spacing: -0.015em;
-    color: var(--text-main);
-    margin-bottom: 10px;
-  }
-  .plan-hook { color: var(--text-sub); font-size: 15px; font-style: italic; margin-bottom: 12px; }
-  .plan-summary { font-size: 14px; line-height: 1.6; color: var(--text-main); }
+      .chat-bubble-img {
+        width: auto;
+        max-width: min(72vw, 220px);
+        max-height: 240px;
+      }
 
-  .scene-card {
-    background: var(--panel-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 18px;
-    margin-bottom: 24px;
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-  }
-  .scene-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 20px;
-    background: var(--panel-bg-2);
-    border-bottom: 1px solid var(--border-color);
-  }
-  .scene-tag { display: flex; align-items: center; gap: 12px; }
-  .scene-num { font-size: 14px; font-weight: 600; color: var(--accent-blue); letter-spacing: 0.02em; }
-  .scene-time {
-    font-family: "SF Mono", ui-monospace, monospace;
-    font-size: 11px;
-    color: var(--text-sub);
-    background: var(--bg-app);
-    padding: 3px 8px;
-    border-radius: 6px;
-    border: 1px solid var(--border-color);
-  }
+      .chat-input-area {
+        position: relative;
+        padding-bottom: env(safe-area-inset-bottom);
+      }
 
-  .scene-body { padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  @media (max-width:700px) { .scene-body { grid-template-columns: 1fr; } }
+      .chat-thumbs-container {
+        padding: 10px 12px 0;
+        gap: 8px;
+      }
 
-  .field {
-    background: var(--bg-app);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 12px 14px;
-  }
-  .field-label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--text-sub);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-  }
-  .field-text {
-    font-family: "SF Mono", ui-monospace, monospace;
-    font-size: 12px;
-    line-height: 1.5;
-    color: var(--text-main);
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
-  .field.wide { grid-column: 1 / -1; }
+      .chat-thumb-item {
+        width: 54px;
+        height: 54px;
+        border-radius: 10px;
+      }
 
-  .copy-btn {
-    background: var(--panel-bg);
-    border: 1px solid var(--border-color);
-    color: var(--text-sub);
-    font-size: 11px;
-    font-weight: 500;
-    padding: 4px 10px;
-    border-radius: 980px;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .copy-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+      .chat-input-wrap {
+        width: 100%;
+        padding: 10px 12px 12px;
+        gap: 8px;
+        align-items: flex-end;
+      }
 
-  .img-preview-btn {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    background: var(--panel-bg-2);
-    border: 1px solid var(--accent-blue);
-    color: var(--accent-blue);
-    font-size: 12px;
-    font-weight: 600;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background 0.15s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-  }
-  .img-preview-btn:hover { background: rgba(0, 113, 227, 0.08); }
-  .scene-image { width: 100%; border-radius: 12px; margin-top: 10px; display: block; border: 1px solid var(--border-color); }
+      .chat-img-btn {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+      }
 
-  .quick-launch { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-  .launch-btn {
-    flex: 1;
-    min-width: 140px;
-    padding: 8px 12px;
-    background: var(--panel-bg-2);
-    border: 1px solid var(--border-color);
-    color: var(--text-main);
-    font-size: 11px;
-    font-weight: 500;
-    border-radius: 980px;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    transition: all 0.15s ease;
-  }
-  .launch-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
-  .launch-btn.active { background: var(--accent-blue); color: #ffffff; border-color: var(--accent-blue); }
+      .chat-input {
+        min-width: 0;
+        min-height: 42px;
+        max-height: 120px;
+        padding: 10px 12px;
+        border-radius: 14px;
+        font-size: 16px; /* mencegah auto-zoom iOS */
+        line-height: 1.35;
+      }
 
-  .cta-block {
-    margin-top: 16px;
-    padding: 20px;
-    background: rgba(0, 113, 227, 0.04);
-    border: 1px solid rgba(0, 113, 227, 0.2);
-    border-radius: 18px;
-  }
-  .cta-block .field-label { color: var(--accent-blue); }
+      .chat-send-btn {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        padding: 0;
+        border-radius: 50%;
+      }
 
-  ::-webkit-scrollbar { width: 7px; }
-  ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
-</style>
+      .chat-send-btn span {
+        display: none;
+      }
+
+      .file-warning {
+        padding: 8px 12px;
+        font-size: 11px;
+      }
+
+      .nav-tabs {
+        flex-shrink: 0;
+      }
+
+      .launch-btn {
+        min-height: 40px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .sidebar,
+      .app.sidebar-collapsed .sidebar {
+        width: min(88vw, 310px);
+      }
+
+      .sidebar {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .brand h1 {
+        font-size: 18px;
+      }
+
+      .chat-row {
+        max-width: 96%;
+      }
+
+      .chat-messages {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .chat-input-wrap {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .chat-img-btn,
+      .chat-send-btn {
+        width: 40px;
+        min-width: 40px;
+        height: 40px;
+      }
+
+      .chat-input {
+        min-height: 40px;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .chat-header,
+      .app.sidebar-collapsed .chat-header {
+        padding-left: 58px;
+      }
+    }
+
+  </style>
 </head>
-<body>
-<div class="app" id="app">
-  <!-- Floating Button to Open Sidebar when Collapsed -->
-  <button class="icon-btn floating-sidebar-open" id="sidebarOpenBtn" title="Buka Sidebar">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
-  </button>
 
-  <div class="sidebar" id="sidebar">
-    <div class="brand-header">
-      <div class="brand">
-        <div class="brand-dot idle" id="recDot"></div>
-        <div>
-          <h1>Sardev Studio</h1>
-          <span>Script &amp; Prompt AI Generator</span>
+<body>
+  <div class="app" id="app">
+    <!-- Floating Button to Open Sidebar when Collapsed -->
+    <button class="icon-btn floating-sidebar-open" id="sidebarOpenBtn" title="Buka Sidebar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+        <line x1="9" y1="3" x2="9" y2="21" />
+      </svg>
+    </button>
+
+    <div class="sidebar" id="sidebar">
+      <div class="brand-header">
+        <div class="brand">
+          <div class="brand-dot idle" id="recDot"></div>
+          <div>
+            <h1>Sardev Studio</h1>
+            <span>Sardev AI Chatbot</span>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:6px;">
+          <!-- Theme Toggle Button (Sun/Moon) -->
+          <button class="icon-btn" id="themeToggleBtn" title="Ganti Mode Terang/Gelap">
+            <svg class="sun-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
+          </button>
+
+          <!-- Sidebar Collapse Toggle Button -->
+          <button class="icon-btn" id="sidebarToggleBtn" title="Sembunyikan Sidebar">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <line x1="9" y1="3" x2="9" y2="21" />
+            </svg>
+          </button>
         </div>
       </div>
 
-      <div style="display:flex; gap:6px;">
-        <!-- Theme Toggle Button (Sun/Moon) -->
-        <button class="icon-btn" id="themeToggleBtn" title="Ganti Mode Terang/Gelap">
-          <svg class="sun-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-        </button>
+      <!-- Navigation Tabs -->
+      <div class="nav-tabs">
+        <a href="index.html" class="nav-tab">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2" />
+            <polyline points="2 17 12 22 22 17" />
+            <polyline points="2 12 12 17 22 12" />
+          </svg>
+          Generator
+        </a>
+        <a href="chat.html" class="nav-tab active">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+          </svg>
+          Chatbot AI
+        </a>
+      </div>
 
-        <!-- Sidebar Collapse Toggle Button -->
-        <button class="icon-btn" id="sidebarToggleBtn" title="Sembunyikan Sidebar">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
-        </button>
+      <div>
+        <span class="upload-label">Template Chat Cepat</span>
+        <div style="display:flex; flex-direction:column; gap:8px; margin-top:8px;">
+          <button class="launch-btn template-btn" type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path
+                d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+            </svg>
+            Ide video TikTok viral
+          </button>
+          <button class="launch-btn template-btn" type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+            </svg>
+            Copywriting promosi bundle
+          </button>
+          <button class="launch-btn template-btn" type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect width="18" height="18" x="3" y="3" rx="2" />
+              <path d="M7 3v18" />
+              <path d="M3 12h18" />
+              <path d="M17 3v18" />
+            </svg>
+            Naskah komedi skincare
+          </button>
+          <button class="launch-btn template-btn" type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+            Penjelasan kandungan aktif
+          </button>
+          <button class="launch-btn danger-btn" id="clearChatBtn" type="button" style="margin-top:16px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 6h18" />
+              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+            </svg>
+            Hapus Riwayat Chat
+          </button>
+        </div>
       </div>
     </div>
 
-    <!-- Navigation Tabs -->
-    <div class="nav-tabs">
-      <a href="index.html" class="nav-tab active">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-        Generator
-      </a>
-      <a href="chat.html" class="nav-tab">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        Chatbot AI
-      </a>
-    </div>
-
-    <div>
-      <label class="upload-zone" id="imgZone">
-        <span class="upload-label">Upload Gambar Produk / Karakter</span>
-        <span class="upload-hint" id="imgHint">Klik untuk memilih 1 atau lebih foto sesuai kebutuhan mode</span>
-        <input type="file" id="imgInput" accept="image/*" multiple>
-      </label>
-      <div class="thumb-grid" id="thumbGrid"></div>
-    </div>
-
-    <div>
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-        <span class="upload-label" style="margin-bottom:0;">Deskripsi Cerita / Produk (Opsional)</span>
-        <button type="button" class="icon-btn" id="descInfoBtn" title="Lihat Contoh Deskripsi" style="width:24px; height:24px; font-size:11px; border-radius:50%;">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-        </button>
+    <div class="main-chat">
+      <div class="file-warning" id="fileWarning">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+          <line x1="12" y1="9" x2="12" y2="13" />
+          <line x1="12" y1="17" x2="12.01" y2="17" />
+        </svg>
+        <span><strong>Peringatan:</strong> Anda membuka file secara langsung (file://). Mohon akses aplikasi melalui
+          <code>https://ai-sardev.github.io/</code> agar backend API berjalan lancar.</span>
       </div>
-      <div class="desc-info-box" id="descInfoBox" style="display:none; margin-bottom:10px; padding:12px; background:var(--panel-bg-2); border:1px solid var(--border-color); border-radius:12px; font-size:12px; color:var(--text-sub); line-height:1.45;">
-        <strong style="color:var(--text-main); display:block; margin-bottom:4px;">Contoh Deskripsi:</strong>
-        <p style="margin-bottom:8px; font-style:italic;" id="exampleText">"Paket hemat body toner merah + pink. Terdiri dari exfoliant body toner dan face toner mencerahkan. Target audiens wanita muda. Buat video review perbandingan."</p>
-        <button type="button" id="useExampleBtn" style="background:var(--accent-blue); color:#ffffff; border:none; padding:4px 12px; border-radius:980px; font-size:11px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:4px;">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          Gunakan Contoh Ini
-        </button>
+
+      <div class="chat-header">
+        <h2>
+          Sardev Chatbot AI
+        </h2>
+        <span>Asisten kecerdasan buatan interaktif Boss</span>
       </div>
-      <textarea class="desc-input" id="descInput" placeholder="Tuliskan deskripsi cerita atau produk di sini..."></textarea>
-    </div>
 
-    <div>
-      <span class="upload-label">Mode Skenario</span>
-      <div class="mode-select">
-        <button class="mode-btn active" data-mode="review">Review</button>
-        <button class="mode-btn" data-mode="film">Film</button>
-        <button class="mode-btn" data-mode="joget">Joget</button>
+      <div class="chat-messages" id="chatMessages">
+        <div class="chat-row ai">
+          <div class="chat-avatar">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="10" rx="2" />
+              <circle cx="12" cy="5" r="2" />
+              <path d="M12 7v4" />
+            </svg>
+            Sardev AI
+          </div>
+          <div class="chat-bubble">Halo Boss! Ada yang bisa saya bantu hari ini? Silakan tanya saya apa saja atau
+            lampirkan foto produk/karakter!</div>
+        </div>
+      </div>
+
+      <div class="chat-input-area">
+        <div class="chat-thumbs-container" id="chatThumbsContainer"></div>
+        <div class="chat-input-wrap">
+          <button type="button" class="chat-img-btn" id="chatImgBtn" title="Lampirkan Foto/Gambar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+              <circle cx="9" cy="9" r="2" />
+              <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+            </svg>
+          </button>
+          <input type="file" id="chatImgInput" accept="image/*" multiple style="display:none;">
+
+          <textarea class="chat-input" id="chatInput"
+            placeholder="Tulis pesan untuk Sardev AI... (Enter untuk kirim, Shift+Enter untuk baris baru)"
+            rows="1"></textarea>
+          <button type="button" class="chat-send-btn" id="chatSendBtn">
+            <span>Kirim</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13" />
+              <polygon points="22 2 15 22 11 13 2 9 22 2" />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
-
-    <button class="generate-btn" id="genBtn">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-      Generate with Sardev AI
-    </button>
-
-    <div class="log" id="log">Menunggu gambar produk diupload...</div>
   </div>
 
-  <div class="main" id="main">
-    <div class="empty-state">
-      <div class="empty-state-icon">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-      </div>
-      <h2>Belum ada production plan</h2>
-      <p>Upload foto produk di panel kiri, lalu klik Generate. Pilih mode Review, Film, atau Joget. Sardev AI akan menganalisis gambar asli dan membuat prompt sesuai mode yang dipilih.</p>
-    </div>
-  </div>
-</div>
-
-<script>
+  <script>
     const API_BASE = "https://api.sardev.biz.id";
 
-// --- Theme System & Sidebar Persistence ---
-const appEl = document.getElementById('app');
-const themeToggleBtn = document.getElementById('themeToggleBtn');
-const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
-const sidebarOpenBtn = document.getElementById('sidebarOpenBtn');
-
-function initTheme() {
-  const savedTheme = localStorage.getItem('sardev-theme') || 'light';
-  document.documentElement.setAttribute('data-theme', savedTheme);
-}
-
-themeToggleBtn.addEventListener('click', () => {
-  const current = document.documentElement.getAttribute('data-theme') || 'light';
-  const next = current === 'light' ? 'dark' : 'light';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('sardev-theme', next);
-});
-
-function initSidebar() {
-  const isCollapsed = localStorage.getItem('sardev-sidebar-collapsed') === 'true';
-  if (isCollapsed) appEl.classList.add('sidebar-collapsed');
-}
-
-sidebarToggleBtn.addEventListener('click', () => {
-  appEl.classList.toggle('sidebar-collapsed');
-  localStorage.setItem('sardev-sidebar-collapsed', appEl.classList.contains('sidebar-collapsed'));
-});
-
-sidebarOpenBtn.addEventListener('click', () => {
-  appEl.classList.remove('sidebar-collapsed');
-  localStorage.setItem('sardev-sidebar-collapsed', 'false');
-});
-
-initTheme();
-initSidebar();
-
-// --- Description Info Toggle & Example Quick-Fill ---
-const descInfoBtn = document.getElementById('descInfoBtn');
-const descInfoBox = document.getElementById('descInfoBox');
-const useExampleBtn = document.getElementById('useExampleBtn');
-const descInputEl = document.getElementById('descInput');
-
-if (descInfoBtn && descInfoBox) {
-  descInfoBtn.addEventListener('click', () => {
-    const isHidden = descInfoBox.style.display === 'none';
-    descInfoBox.style.display = isHidden ? 'block' : 'none';
-  });
-}
-
-if (useExampleBtn && descInputEl) {
-  useExampleBtn.addEventListener('click', () => {
-    descInputEl.value = 'Paket hemat body toner merah + pink. Terdiri dari exfoliant body toner dan face toner mencerahkan. Target audiens wanita muda. Buat video review perbandingan.';
-    descInfoBox.style.display = 'none';
-    descInputEl.focus();
-  });
-}
-
-// --- Core Generator Application Logic ---
-const state = { images: [], mode: 'review' };
-
-function toBase64(file){
-  return new Promise((resolve, reject) => {
-    const r = new FileReader();
-    r.onload = () => resolve(r.result.split(',')[1]);
-    r.onerror = reject;
-    r.readAsDataURL(file);
-  });
-}
-
-const imgZone = document.getElementById('imgZone');
-const imgInput = document.getElementById('imgInput');
-const imgHint = document.getElementById('imgHint');
-const thumbGrid = document.getElementById('thumbGrid');
-
-imgZone.addEventListener('click', () => imgInput.click());
-async function addGeneratorImages(files){
-  const imageFiles = Array.from(files || []).filter(file => file.type && file.type.startsWith('image/'));
-  for(const file of imageFiles){
-    const b64 = await toBase64(file);
-    const url = URL.createObjectURL(file);
-    state.images.push({ base64: b64, mediaType: file.type || 'image/jpeg', name: file.name, url });
-  }
-  renderThumbs();
-  if(imageFiles.length) log(`${imageFiles.length} gambar ditambahkan (total ${state.images.length}).`, 'ok');
-}
-
-imgInput.addEventListener('change', async () => {
-  await addGeneratorImages(imgInput.files);
-  imgInput.value = '';
-});
-
-['dragenter','dragover'].forEach(evt => imgZone.addEventListener(evt, e => {
-  e.preventDefault();
-  imgZone.classList.add('filled');
-}));
-['dragleave','drop'].forEach(evt => imgZone.addEventListener(evt, e => {
-  e.preventDefault();
-  if(evt === 'drop') addGeneratorImages(e.dataTransfer.files);
-  else imgZone.classList.toggle('filled', state.images.length > 0);
-}));
-
-function renderThumbs(){
-  thumbGrid.innerHTML = '';
-  state.images.forEach((img, idx) => {
-    const item = document.createElement('div');
-    item.className = 'thumb-item';
-    const el = document.createElement('img');
-    el.src = img.url;
-    const rm = document.createElement('button');
-    rm.className = 'thumb-remove';
-    rm.innerHTML = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
-    rm.addEventListener('click', (e) => {
-      e.stopPropagation();
-      state.images.splice(idx, 1);
-      renderThumbs();
-    });
-    item.appendChild(el);
-    item.appendChild(rm);
-    thumbGrid.appendChild(item);
-  });
-  imgZone.classList.toggle('filled', state.images.length > 0);
-  imgHint.textContent = state.images.length > 0
-    ? `${state.images.length} gambar dipilih — klik lagi untuk tambah`
-    : 'Klik untuk memilih 1 atau lebih foto sesuai kebutuhan mode';
-}
-
-document.querySelectorAll('.mode-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    state.mode = btn.dataset.mode;
-  });
-});
-
-const genBtn = document.getElementById('genBtn');
-const logEl = document.getElementById('log');
-const recDot = document.getElementById('recDot');
-
-function log(msg, cls){
-  const line = document.createElement('div');
-  if(cls) line.className = cls;
-  const span = document.createElement('span');
-  span.textContent = '> ' + msg;
-  line.appendChild(span);
-  logEl.prepend(line);
-}
-
-function copyText(text, btn){
-  navigator.clipboard.writeText(text).then(() => {
-    if(btn){
-      const orig = btn.innerHTML;
-      btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied`;
-      setTimeout(() => btn.innerHTML = orig, 1200);
-    }
-  });
-}
-
-const SARDEV_IDENTITY = `Anda bekerja di dalam Sardev Studio. Panggil pengguna dengan sebutan "Boss" secara natural. Jika ditanya siapa pembuat/pengembang Sardev AI, jawab bahwa Sardev AI dibuat dan dikembangkan oleh Muhamad Satria. Gambar yang dilampirkan pada pesan user adalah input visual asli dan WAJIB benar-benar dianalisis, bukan hanya ditebak dari nama file.`;
-
-const REVIEW_PROMPT = `Kamu adalah AI Prompt Engineer khusus untuk membuat prompt video AI (text-to-video/image-to-video) dari produk e-commerce, ditujukan untuk format Reels/TikTok/Shorts vertikal 9:16. Tugasmu: menerima [GAMBAR PRODUK] dan [DESKRIPSI PRODUK dari user], menganalisisnya, lalu menghasilkan SATU prompt video final yang siap langsung dipakai di tools seperti Kling AI, Runway Gen-3, Pika, atau Luma Dream Machine.
-
-=== LANGKAH ANALISIS (lakukan sebelum menulis output) ===
-1. Analisis gambar: identifikasi jenis produk, warna dominan, material/tekstur (matte/glossy/transparan/kain/logam/dll), bentuk, ukuran relatif, dan detail unik yang perlu ditonjolkan.
-2. Analisis deskripsi user: ambil informasi kunci — nama produk, manfaat utama, target audiens, harga/promo (jika ada), dan tone brand yang diinginkan.
-3. Tentukan mood video paling cocok berdasarkan kombinasi visual produk + deskripsi: pilih salah satu dari [Aesthetic Minimalis / Energik & Fun / Premium & Mewah / Lucu & Relatable] — pilih otomatis berdasarkan analisis, jangan tanya balik ke user kecuali deskripsi benar-benar ambigu.
-4. Tentukan setting/background yang realistis dan sesuai kategori produk (skincare → meja marmer/kamar mandi estetik; makanan → meja kayu/dapur hangat; fashion → studio/outdoor; elektronik → meja minimalis/dark studio, dst).
-
-=== ATURAN WAJIB UNTUK OUTPUT PROMPT ===
-- Format akhir WAJIB vertical 9:16, resolusi 1080x1920, durasi 8-10 detik.
-- SEMUA gerakan kamera dan produk harus dideskripsikan dengan easing natural (slow-start, speed-mid, slow-end) — dilarang keras menulis gerakan linear/konstan/robotic.
-- Gerakan kamera: kombinasikan minimal 2 dari — slow dolly-in, subtle handheld micro-shake, orbit 15-20 derajat, rack focus, parallax ringan.
-- Gerakan produk: rotasi/interaksi natural dengan physics realistis (bukan snap instan), sesuaikan dengan jenis produk dari hasil analisis gambar.
-- Lighting harus dideskripsikan bergerak mengikuti kamera (moving highlight), bukan statis.
-- WAJIB menyertakan instruksi animated kinetic typography caption: posisi upper-third (tidak menutupi produk), animasi pop-in per kata dengan bounce/scale, highlight kata kunci dengan pulse-scale + warna aksen, dan struktur 3 fase wajib:
-  a) HOOK (0-2 detik): kalimat provokatif/pertanyaan berdasarkan manfaat utama produk dari deskripsi user
-  b) BUILD-UP (2-6 detik): 2-3 keunggulan produk muncul bertahap
-  c) CTA (6 detik-akhir): ajakan aksi dengan animasi lebih tegas (scale/shake ringan)
-- Tulis hook dan caption text yang SPESIFIK untuk produk ini (bukan placeholder generik), diambil dari deskripsi user.
-- Sertakan color grading yang sesuai mood yang sudah ditentukan di langkah analisis.
-
-=== FORMAT OUTPUT (ikuti persis struktur ini, JANGAN tambah section lain) ===
-
-**Ringkasan Analisis Produk** (2-3 kalimat: apa produknya, mood yang dipilih, alasan singkat)
-
-**PROMPT VIDEO FINAL:**
-[Tulis dalam satu paragraf/blok siap-copy dalam Bahasa Inggris, mencakup: subject & setting, camera movement, lighting, product motion, background motion, mood & color grading, dan instruksi caption animation lengkap dengan teks hook/build-up/CTA yang sudah spesifik]
-
-**Caption Text (Bahasa Indonesia, untuk referensi manual jika perlu edit):**
-- Hook: "..."
-- Build-up 1: "..."
-- Build-up 2: "..."
-- CTA: "..."
-
-Input gambar dan deskripsi sudah diberikan oleh aplikasi. Jangan balas pesan kesiapan dan jangan meminta user mengirim ulang gambar. Analisis lampiran lalu langsung hasilkan output sesuai struktur di atas.`;
-
-const FILM_PROMPT = `Kamu adalah gabungan dari: Sutradara Film profesional, Penulis Skenario (Screenwriter) berpengalaman,
-Director of Photography (DOP), dan AI Prompt Engineer spesialis produksi film/serial berbasis AI
-(untuk tools seperti Midjourney, Runway, Luma Dream Machine, Google Veo, Kling AI).
-
-Tugasmu: menerima input dari user berupa [GAMBAR KARAKTER] dan/atau [KONSEP CERITA/PREMIS], lalu
-merancangnya menjadi produksi film/serial lengkap, terstruktur, sinematik, dan siap produksi —
-dari scene pertama hingga scene penutup, tanpa batas jumlah scene, mengikuti kebutuhan narasi.
-
-=== TAHAP 0: STORY BIBLE (WAJIB dibuat SEKALI di awal, sebelum scene pertama) ===
-Sebelum menulis scene manapun, buat dulu "Story Bible" agar konsistensi terjaga sepanjang produksi:
-
-1. JUDUL FILM/SERIAL & GENRE
-2. LOGLINE (1-2 kalimat inti cerita)
-3. STRUKTUR CERITA: tentukan babak (Act 1 - Setup, Act 2 - Konflik/Rising Action, Act 3 - Klimaks & Resolusi), perkirakan total jumlah scene berdasarkan kompleksitas cerita
-4. CHARACTER SHEET untuk setiap karakter utama (dari analisis gambar + deskripsi user):
-   - Nama, usia, peran dalam cerita
-   - Ciri fisik permanen (bentuk wajah, warna & gaya rambut, tinggi badan, warna kulit, ciri khas/tanda lahir/bekas luka)
-   - Kostum default & variasi kostum per babak jika ada (harus dicatat agar tidak berubah acak antar scene)
-   - Kepribadian & gestur khas (cara bicara, cara berjalan, ekspresi khas)
-   - Voice Profile dasar (rentang usia suara, aksen, timbre — akan dipakai konsisten di semua dialog)
-5. SETTING/DUNIA CERITA: lokasi utama, era/waktu, palet warna visual keseluruhan film (color grading signature), gaya sinematik referensi (misal: "seperti film A24", "gaya Denis Villeneuve", "warm nostalgic 90s", dll)
-6. VISUAL CONSISTENCY TOKEN: buat deskripsi baku yang HARUS ditulis ulang persis sama di setiap prompt text-to-image karakter tsb di scene manapun.
-
-=== TAHAP 1: PRODUKSI SCENE (ulangi untuk setiap scene, sebanyak yang dibutuhkan cerita) ===
-
-Untuk SETIAP scene, hasilkan output dengan struktur PERSIS berikut:
-
----
-**SCENE [nomor] — [Judul Scene singkat & evocative]**
-*Babak: [Act 1/2/3] | Lokasi: [tempat] | Waktu: [pagi/siang/malam, hari keberapa jika relevan] | Durasi estimasi: [x detik]*
-
-**1. SINOPSIS SCENE**
-(2-3 kalimat: apa yang terjadi di scene ini, tujuan naratifnya, dan bagaimana emosi berkembang dari awal ke akhir scene)
-
-**2. PROMPT TEXT-TO-IMAGE (Cover/Thumbnail Scene)**
-[Prompt dalam Bahasa Inggris, siap-copy, format 16:9, mencakup:
-- Deskripsi karakter PERSIS mengikuti Visual Consistency Token dari Story Bible (jangan diparafrase ulang)
-- Framing/shot type (wide shot/medium shot/close-up/extreme close-up — pilih sesuai kebutuhan emosi scene)
-- Lighting cinematic (arah cahaya, hard/soft light, motivated light source dari sumber di scene)
-- Lens & depth of field (misal: 35mm, shallow depth of field, bokeh background)
-- Color grading sesuai signature Story Bible
-- Mood/atmosfer scene
-- Style reference: "cinematic film still, photorealistic, 16:9 aspect ratio, shot on ARRI Alexa, [genre] film aesthetic"]
-
-**3. PROMPT IMAGE-TO-VIDEO**
-[Prompt dalam Bahasa Inggris, siap-copy, mencakup:
-- Durasi klip (detik)
-- Gerakan kamera dengan easing natural (slow-start/mid/slow-end) — kombinasi dari: dolly in/out, pan, tilt, tracking shot, handheld subtle shake, crane shot, static dengan subject movement
-- Ekspresi mikro karakter (kedipan mata, gerakan alis, senyum tipis yang berkembang, napas terlihat, perubahan ekspresi bertahap sesuai emosi dialog — bukan ekspresi statis)
-- Gerakan subjek/blocking (bagaimana karakter bergerak dalam frame: berjalan, menoleh, duduk, dll dengan physics & timing realistis)
-- Continuity note singkat: "maintain same character appearance and outfit as previous scene"]
-
-**4. DIALOG LENGKAP**
-[Nama Karakter]: "..." *(catatan aksi/emosi dalam kurung jika perlu)*
-(Tulis dialog senatural mungkin, sesuai kepribadian karakter dari Story Bible, dengan ritme percakapan yang mengalir — termasuk jeda, potongan kalimat, atau keheningan jika mendukung emosi scene)
-
-**5. DESKRIPSI AUDIO & DUBBING**
-
-a) Profil Suara per Karakter (untuk voice generation/dubbing):
-   - [Nama Karakter]: usia suara [x tahun], nada [tinggi/sedang/rendah], tempo bicara [cepat/sedang/lambat], emosi dominan di scene ini [tegang/lembut/marah/sedih/dll], catatan khusus (napas, jeda, penekanan kata)
-
-b) Sound Effects (SFX):
-   - [Daftar SFX spesifik sesuai aksi & environment scene — sertakan timing kasar kapan muncul]
-
-c) Background Music (BGM):
-   - Genre/mood musik
-   - Perubahan intensitas musik jika ada
-   - Referensi mood
-
-**6. TRANSISI KE SCENE BERIKUTNYA**
-[Deskripsi singkat jenis transisi sinematik: cut to, fade, match cut, jump cut, dll — dan alasan naratif kenapa transisi ini dipilih]
-
----
-
-=== ATURAN WAJIB (berlaku di semua scene) ===
-- KONSISTENSI KARAKTER MUTLAK: wajah, tubuh, kostum, dan ciri khas karakter TIDAK BOLEH berubah di scene manapun kecuali ada alasan naratif eksplisit.
-- Semua gerakan kamera & karakter WAJIB memakai easing natural (percepatan/perlambatan halus), DILARANG menulis gerakan linear/konstan/kaku/robotic.
-- Ekspresi mikro WAJIB ada di setiap prompt image-to-video — karakter tidak boleh terlihat seperti foto diam yang sekadar bergerak.
-- Alur antar scene harus terasa seperti film utuh (ada sebab-akibat, build-up emosi, dan pacing yang bervariasi antara scene tenang dan scene intens) — BUKAN kumpulan klip terpisah yang tidak nyambung.
-- Jangan membatasi jumlah scene. Buat sebanyak yang dibutuhkan cerita untuk tuntas dari awal hingga akhir, atau ikuti instruksi user jika mereka minta jumlah scene/durasi tertentu.
-- Semua prompt visual (text-to-image & image-to-video) ditulis dalam Bahasa Inggris. Dialog, deskripsi audio, dan narasi produksi ditulis dalam Bahasa Indonesia yang profesional.
-- Jika input user berupa gambar karakter, analisis dulu ciri fisiknya secara detail SEBELUM membuat Story Bible, agar Visual Consistency Token akurat sesuai gambar asli.
-
-=== MODE REVIEW ===
-Dalam aplikasi generator ini, user dianggap SECARA EKSPLISIT meminta "lanjutkan semua scene sekaligus tanpa jeda review". Jadi jangan berhenti menunggu konfirmasi antar-scene. Tulis Story Bible lalu seluruh scene sampai cerita selesai dalam satu respons.
-
-=== INPUT YANG AKAN DITERIMA ===
-[GAMBAR KARAKTER]: gambar terlampir pada pesan user
-[KONSEP CERITA/PREMIS]: deskripsi pada pesan user
-[JUMLAH SCENE/DURASI DIINGINKAN]: jika disebutkan oleh user
-
-Input sudah tersedia. Jangan balas kalimat kesiapan; langsung analisis gambar dan/atau premis, susun Story Bible, lalu produksi semua scene sampai penutup.`;
-
-const JOGET_PROMPT = `Kamu adalah AI Video Director spesialis konten viral TikTok/Affiliate, dengan keahlian khusus membuat prompt video karakter berjoget/bergerak dinamis untuk tools AI video generator (Luma Dream Machine, Runway Gen-3, Kling AI, Google Veo, Pika). Fokus utamamu: menghasilkan video yang FLUID (tidak kaku), manusiawi (ada mikro-ekspresi), bebas morphing/distorsi tubuh, dan dioptimalkan untuk retensi penonton di format vertikal 9:16.
-
-=== LANGKAH ANALISIS AWAL (lakukan sebelum menulis prompt) ===
-1. Analisis input (gambar karakter/produk dan/atau deskripsi user): identifikasi ciri fisik karakter, outfit, warna kulit/rambut, dan konteks produk yang mau ditonjolkan (jika mode affiliate/jualan).
-2. Tentukan jenis gerakan joget paling sesuai dengan vibe karakter & produk — pilih otomatis dari: [Energetic viral TikTok dance / Smooth hip-hop groove / Casual swaying & body roll / K-pop style sharp choreography / Chill vibe head-bob & shoulder sway] — atau ikuti permintaan spesifik user jika disebutkan.
-3. Tentukan level intensitas gerakan berdasarkan tujuan: [Affiliate/jualan produk → gerakan sedang, produk tetap terlihat jelas] vs [Hiburan murni/hook viral → gerakan lebih enerjik & eye-catching].
-4. Buat CHARACTER CONSISTENCY TOKEN: satu kalimat baku deskripsi fisik & outfit karakter yang WAJIB dipakai persis sama di setiap prompt (untuk mencegah wajah/tubuh berubah antar take/scene).
-
-=== FORMAT OUTPUT WAJIB (ikuti struktur ini persis) ===
-
-**Ringkasan Konsep**
-(1-2 kalimat: jenis joget yang dipilih, vibe keseluruhan, dan alasan singkat kenapa cocok untuk karakter/produk ini)
-
-**1. VIDEO PROMPT (Bahasa Inggris — siap copy-paste)**
-[Satu blok prompt lengkap, mencakup SEMUA elemen berikut dalam satu paragraf mengalir:
-- Format: vertical 9:16, 1080x1920, [durasi] seconds
-- Subject description: gunakan Character Consistency Token persis sama (wajah, outfit, warna kulit/rambut)
-- Background/setting sesuai konteks
-- Jenis gerakan tari spesifik + level energi, fluid natural movement, no rigid robotic motion
-- Micro-expressions eksplisit: subtle genuine smile that grows naturally, occasional laugh, eyes engaged with camera, natural blinking, relaxed facial muscle movement — not a frozen or stiff face
-- Anti-morphing instruction eksplisit: maintain consistent body proportions and facial structure throughout the entire clip, no distortion, no limb warping, no unnatural stretching, stable anatomy across all frames
-- Camera movement dengan easing natural (slow tracking shot, subtle handheld sway, zoom in perlahan, orbit ringan)
-- Lighting sesuai mood
-- Kualitas render: photorealistic, 4K quality, cinematic lighting, natural skin texture, 60fps smooth motion, sharp focus on subject
-- Jika ada produk: product remains clearly visible and in-frame during momen spesifik gerakan, not obscured by motion]
-
-**2. TIPS PENGAMBILAN GAMBAR (Bahasa Indonesia)**
-- Angle kamera: rekomendasi spesifik sesuai jenis gerakan
-- Framing: full body / medium shot / close-up alternation sesuai kebutuhan
-- Penempatan teks/overlay: posisi yang tidak menutupi wajah, tangan, atau produk
-- Timing pergantian angle jika multi-take
-
-**3. REKOMENDASI MUSIK**
-- Genre & mood sesuai jenis joget
-- Tempo (BPM range) yang cocok
-- Saran momen drop/beat-sync
-- Alternatif 2-3 genre musik trending yang bisa dicoba beserta alasan singkat
-
-**4. CATATAN CAPTION ANIMATION (Hook & Retensi)**
-- Hook text (0-2 detik): spesifik berdasarkan konteks produk/karakter, bukan generik
-- Animasi teks: pop-in per kata dengan bounce, sinkron beat, posisi tidak menutupi gerakan
-- Mid-video caption (opsional): teks singkat saat momen wow
-- CTA caption di akhir: ajakan aksi dengan animasi scale-pulse
-
-=== ATURAN WAJIB (berlaku di semua output) ===
-- Gerakan WAJIB fluid/natural — dilarang gerakan patah-patah, linear konstan, atau robotic. Selalu gunakan easing dan natural rhythm.
-- Mikro-ekspresi wajah WAJIB disebutkan eksplisit di setiap prompt.
-- Instruksi ANTI-MORPHING wajib ada di setiap Video Prompt.
-- Jika user menyediakan gambar karakter/produk, gunakan Character Consistency Token yang sama persis di setiap revisi/take.
-- Semua Video Prompt ditulis dalam Bahasa Inggris, sedangkan Tips, Rekomendasi Musik, dan Catatan Caption ditulis dalam Bahasa Indonesia.
-- Jika ada produk spesifik, pastikan produk tetap terlihat jelas dan tidak tertutup gerakan tubuh di momen kunci.
-- Jika user tidak spesifik jenis joget, tuliskan 1 prompt utama + sebutkan singkat 1-2 alternatif gaya gerakan yang bisa diminta berikutnya.
-
-=== INPUT YANG AKAN DITERIMA ===
-[GAMBAR KARAKTER/PRODUK]: gambar terlampir pada pesan user
-[DESKRIPSI/PERMINTAAN USER]: deskripsi pada pesan user
-
-Input sudah diberikan oleh aplikasi. Jangan balas kalimat kesiapan dan jangan meminta user mengunggah ulang gambar. Langsung analisis gambar lalu hasilkan output sesuai struktur wajib.`;
-
-const SYSTEM_PROMPTS = {
-  review: `${SARDEV_IDENTITY}\n\n${REVIEW_PROMPT}`,
-  film: `${SARDEV_IDENTITY}\n\n${FILM_PROMPT}`,
-  joget: `${SARDEV_IDENTITY}\n\n${JOGET_PROMPT}`
-};
-
-genBtn.addEventListener('click', async () => {
-  if (state.images.length === 0 && !document.getElementById('descInput').value.trim()) {
-    log('Upload gambar atau isi deskripsi produk dulu.', 'err');
-    return;
-  }
-  runGeneration();
-});
-
-async function runGeneration() {
-  genBtn.disabled = true;
-  genBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg> Generating...`;
-  if (recDot) {
-    recDot.classList.remove('idle');
-    recDot.classList.add('live');
-  }
-  log(`Mengirim request ke Sardev Web AI...`);
-
-  const descText = document.getElementById('descInput').value.trim();
-  let userText = `MODE: ${state.mode.toUpperCase()}\n`;
-  if (descText) userText += `DESKRIPSI / KONSEP DARI USER:\n${descText}\n`;
-  if (state.images.length > 0) {
-    userText += `\nAda ${state.images.length} gambar asli terlampir: ${state.images.map(img => img.name).join(', ')}. Analisis visual setiap gambar secara langsung dan gunakan detail yang benar-benar terlihat.\n`;
-  }
-  userText += `\nKerjakan sekarang sesuai template mode ${state.mode.toUpperCase()}.`;
-
-  const userContent = [{ type: 'text', text: userText }];
-  state.images.forEach(img => {
-    userContent.push({
-      type: 'image_url',
-      image_url: { url: `data:${img.mediaType};base64,${img.base64}` },
-      filename: img.name
-    });
-  });
-
-  const payload = {
-    model: 'deepseek-chat',
-    max_tokens: 12000,
-    search: false,
-    messages: [
-      { role: 'system', content: SYSTEM_PROMPTS[state.mode] },
-      { role: 'user', content: userContent }
-    ]
-  };
-
-  try {
-    const response = await fetch(API_BASE + '/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-
-    const data = await response.json();
-    if (!response.ok || data.error) {
-      throw new Error(data.error?.message || data.error || `HTTP error! status: ${response.status}`);
+    // --- Theme System & Sidebar Persistence ---
+    const appEl = document.getElementById('app');
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+    const sidebarOpenBtn = document.getElementById('sidebarOpenBtn');
+
+    function initTheme() {
+      const savedTheme = localStorage.getItem('sardev-theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
     }
 
-    const raw = data.choices[0].message.content.trim();
-    log(`Hasil mode ${state.mode.toUpperCase()} berhasil dibuat dari ${state.images.length} gambar.`, 'ok');
-    renderGeneratedResult(raw, state.mode);
-  } catch(err) {
-    console.error(err);
-    log('Gagal: ' + err.message + '.', 'err');
-  } finally {
-    genBtn.disabled = false;
-    genBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Generate with Sardev AI`;
-    if (recDot) {
-      recDot.classList.remove('live');
-      recDot.classList.add('idle');
-    }
-  }
-}
-
-function renderGeneratedResult(text, mode){
-  const main = document.getElementById('main');
-  main.innerHTML = '';
-
-  const ctrlBar = document.createElement('div');
-  ctrlBar.className = 'plan-controls';
-
-  const modeLabel = document.createElement('div');
-  modeLabel.innerHTML = `<strong>${mode.toUpperCase()}</strong> · Vision Input · DeepSeek Web`;
-  modeLabel.style.fontSize = '12px';
-  modeLabel.style.color = 'var(--text-sub)';
-  ctrlBar.appendChild(modeLabel);
-
-  const copyBtn = document.createElement('button');
-  copyBtn.className = 'launch-btn';
-  copyBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy Semua`;
-  copyBtn.addEventListener('click', () => copyText(text, copyBtn));
-  ctrlBar.appendChild(copyBtn);
-  main.appendChild(ctrlBar);
-
-  const header = document.createElement('div');
-  header.className = 'plan-header';
-  const titles = { review: 'Prompt Video Review Produk', film: 'Production Plan Film AI', joget: 'Prompt Video Joget / Affiliate' };
-  header.innerHTML = `
-    <div class="plan-eyebrow">${mode.toUpperCase()} · Gambar Dianalisis AI</div>
-    <div class="plan-title">${titles[mode] || 'Hasil Sardev AI'}</div>
-    <div class="plan-summary">Hasil dibuat dari deskripsi dan lampiran gambar yang dikirim langsung ke DeepSeek Web.</div>`;
-  main.appendChild(header);
-
-  const card = document.createElement('div');
-  card.className = 'scene-card';
-  const head = document.createElement('div');
-  head.className = 'scene-head';
-  head.innerHTML = `<div class="scene-tag"><span class="scene-num">HASIL ${mode.toUpperCase()}</span></div>`;
-  card.appendChild(head);
-  const body = document.createElement('div');
-  body.className = 'scene-body';
-  body.appendChild(fieldBlock('Output Siap Copy', text, true));
-  card.appendChild(body);
-  main.appendChild(card);
-}
-
-function fieldBlock(label, text, isWide){
-  const wrap = document.createElement('div');
-  wrap.className = 'field' + (isWide ? ' wide' : '');
-  const lab = document.createElement('div');
-  lab.className = 'field-label';
-  lab.innerHTML = `<span>${label}</span>`;
-  const btn = document.createElement('button');
-  btn.className = 'copy-btn';
-  btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy`;
-  btn.addEventListener('click', () => copyText(text, btn));
-  lab.appendChild(btn);
-  const txt = document.createElement('div');
-  txt.className = 'field-text';
-  txt.textContent = text || '—';
-  wrap.appendChild(lab);
-  wrap.appendChild(txt);
-  return wrap;
-}
-
-function quickLaunchRow(scene){
-  const row = document.createElement('div');
-  row.className = 'quick-launch';
-
-  const flowImgBtn = document.createElement('button');
-  flowImgBtn.className = 'launch-btn';
-  flowImgBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> Copy + Buka Flow (Gambar)`;
-  flowImgBtn.addEventListener('click', () => {
-    copyText(scene.image_prompt, flowImgBtn);
-    window.open('https://labs.google/fx/tools/flow', '_blank');
-  });
-  row.appendChild(flowImgBtn);
-
-  const flowVidBtn = document.createElement('button');
-  flowVidBtn.className = 'launch-btn';
-  flowVidBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg> Copy + Buka Flow (Video)`;
-  flowVidBtn.addEventListener('click', () => {
-    copyText(scene.video_prompt, flowVidBtn);
-    window.open('https://labs.google/fx/tools/flow', '_blank');
-  });
-  row.appendChild(flowVidBtn);
-
-  return row;
-}
-
-function renderPlan(plan){
-  const main = document.getElementById('main');
-  main.innerHTML = '';
-
-  const ctrlBar = document.createElement('div');
-  ctrlBar.className = 'plan-controls';
-  
-  const leftGroup = document.createElement('div');
-  leftGroup.style.display = 'flex';
-  leftGroup.style.gap = '8px';
-
-  const viewBtnCard = document.createElement('button');
-  viewBtnCard.className = 'launch-btn active';
-  viewBtnCard.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Tampilan Kartu (Visual)`;
-  
-  const viewBtnJson = document.createElement('button');
-  viewBtnJson.className = 'launch-btn';
-  viewBtnJson.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Tampilan JSON`;
-
-  leftGroup.appendChild(viewBtnCard);
-  leftGroup.appendChild(viewBtnJson);
-  ctrlBar.appendChild(leftGroup);
-
-  const rightGroup = document.createElement('div');
-  rightGroup.style.display = 'flex';
-  rightGroup.style.gap = '8px';
-
-  const copyAllJsonBtn = document.createElement('button');
-  copyAllJsonBtn.className = 'launch-btn';
-  copyAllJsonBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy Semua (JSON)`;
-  copyAllJsonBtn.style.borderColor = 'var(--accent-blue)';
-  copyAllJsonBtn.style.color = 'var(--accent-blue)';
-  copyAllJsonBtn.addEventListener('click', () => {
-    copyText(JSON.stringify(plan, null, 2), copyAllJsonBtn);
-  });
-
-  const copyAllTextBtn = document.createElement('button');
-  copyAllTextBtn.className = 'launch-btn';
-  copyAllTextBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Copy Semua (Teks)`;
-  copyAllTextBtn.style.borderColor = 'var(--text-sub)';
-  copyAllTextBtn.style.color = 'var(--text-main)';
-  copyAllTextBtn.addEventListener('click', () => {
-    let txt = `JUDUL: ${plan.title || ''}\nHOOK: ${plan.hook || ''}\nSUMMARY: ${plan.summary || ''}\n\n`;
-    (plan.scenes || []).forEach(s => {
-      txt += `=== SCENE ${s.number} ===\n`;
-      txt += `Prompt Gambar: ${s.image_prompt}\n`;
-      txt += `Prompt Video: ${s.video_prompt}\n`;
-      if(s.dialog) txt += `Dialog: ${s.dialog}\n`;
-      if(s.voice_desc) txt += `Suara: ${s.voice_desc}\n`;
-      txt += `SFX: ${s.sfx}\n`;
-      txt += `BGM: ${s.bgm}\n\n`;
+    themeToggleBtn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const next = current === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('sardev-theme', next);
     });
-    txt += `CTA: ${plan.cta}\n`;
-    txt += `Thumbnail: ${plan.thumbnail_prompt}\n`;
-    copyText(txt, copyAllTextBtn);
-  });
 
-  rightGroup.appendChild(copyAllJsonBtn);
-  rightGroup.appendChild(copyAllTextBtn);
-  ctrlBar.appendChild(rightGroup);
-  
-  main.appendChild(ctrlBar);
+    const MOBILE_BREAKPOINT = 900;
 
-  const cardContainer = document.createElement('div');
-  cardContainer.className = 'plan-card-container';
-  main.appendChild(cardContainer);
+    function isMobileLayout() {
+      return window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`).matches;
+    }
 
-  const jsonContainer = document.createElement('div');
-  jsonContainer.className = 'plan-json-container';
-  jsonContainer.style.display = 'none';
-  
-  const pre = document.createElement('pre');
-  pre.style.margin = '0';
-  pre.style.padding = '16px';
-  pre.style.background = 'var(--bg-app)';
-  pre.style.border = '1px solid var(--border-color)';
-  pre.style.borderRadius = '12px';
-  pre.style.color = 'var(--text-main)';
-  pre.style.overflowX = 'auto';
-  pre.style.fontFamily = '"SF Mono", ui-monospace, monospace';
-  pre.style.fontSize = '12px';
-  pre.style.lineHeight = '1.6';
-  pre.textContent = JSON.stringify(plan, null, 2);
-  jsonContainer.appendChild(pre);
-  main.appendChild(jsonContainer);
+    function setSidebarCollapsed(collapsed, persistDesktop = true) {
+      appEl.classList.toggle('sidebar-collapsed', collapsed);
 
-  viewBtnCard.addEventListener('click', () => {
-    viewBtnCard.classList.add('active');
-    viewBtnJson.classList.remove('active');
-    cardContainer.style.display = 'block';
-    jsonContainer.style.display = 'none';
-  });
-  
-  viewBtnJson.addEventListener('click', () => {
-    viewBtnJson.classList.add('active');
-    viewBtnCard.classList.remove('active');
-    cardContainer.style.display = 'none';
-    jsonContainer.style.display = 'block';
-  });
+      // Di mobile sidebar selalu mulai tertutup setiap halaman dibuka.
+      // Preferensi localStorage tetap dipakai untuk layout desktop.
+      if (persistDesktop && !isMobileLayout()) {
+        localStorage.setItem('sardev-sidebar-collapsed', collapsed ? 'true' : 'false');
+      }
+    }
 
-  const header = document.createElement('div');
-  header.className = 'plan-header';
-  header.innerHTML = `
-    <div class="plan-eyebrow">${plan.mode || 'MODE'} · 9:16</div>
-    <div class="plan-title">${plan.title || ''}</div>
-    <div class="plan-hook">"${plan.hook || ''}"</div>
-    <div class="plan-summary">${plan.summary || ''}</div>
-  `;
-  cardContainer.appendChild(header);
+    function initSidebar() {
+      if (isMobileLayout()) {
+        // Default mobile: sidebar hidden, seperti layout chatbot modern.
+        setSidebarCollapsed(true, false);
+        return;
+      }
 
-  (plan.scenes || []).forEach(scene => {
-    const card = document.createElement('div');
-    card.className = 'scene-card';
+      const isCollapsed = localStorage.getItem('sardev-sidebar-collapsed') === 'true';
+      setSidebarCollapsed(isCollapsed, false);
+    }
 
-    const head = document.createElement('div');
-    head.className = 'scene-head';
-    head.innerHTML = `
-      <div class="scene-tag">
-        <span class="scene-num">SCENE ${scene.number}</span>
-        <span class="scene-time">00:00:08</span>
+    sidebarToggleBtn.addEventListener('click', () => {
+      setSidebarCollapsed(true);
+    });
+
+    sidebarOpenBtn.addEventListener('click', () => {
+      setSidebarCollapsed(false);
+    });
+
+    // Saat sidebar terbuka sebagai drawer di mobile, tap area chat untuk menutupnya.
+    const mainChatEl = document.querySelector('.main-chat');
+    if (mainChatEl) {
+      mainChatEl.addEventListener('click', (event) => {
+        if (
+          isMobileLayout() &&
+          !appEl.classList.contains('sidebar-collapsed') &&
+          !event.target.closest('.floating-sidebar-open')
+        ) {
+          setSidebarCollapsed(true, false);
+        }
+      });
+    }
+
+    // Jika berpindah dari desktop ke ukuran mobile, langsung sembunyikan sidebar.
+    let lastMobileState = isMobileLayout();
+    window.addEventListener('resize', () => {
+      const nowMobile = isMobileLayout();
+      if (nowMobile && !lastMobileState) {
+        setSidebarCollapsed(true, false);
+      } else if (!nowMobile && lastMobileState) {
+        const desktopCollapsed = localStorage.getItem('sardev-sidebar-collapsed') === 'true';
+        setSidebarCollapsed(desktopCollapsed, false);
+      }
+      lastMobileState = nowMobile;
+    });
+
+    initTheme();
+    initSidebar();
+
+    // --- Global Error Handler & Protocol Check ---
+    window.onerror = function (message, source, lineno, colno, error) {
+      console.error("JS Error: " + message + " pada baris " + lineno + ":" + colno);
+      return false;
+    };
+    if (window.location.protocol === 'file:') {
+      document.getElementById('fileWarning').style.display = 'flex';
+    }
+
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const chatSendBtn = document.getElementById('chatSendBtn');
+    const chatImgBtn = document.getElementById('chatImgBtn');
+    const chatImgInput = document.getElementById('chatImgInput');
+    const chatThumbsContainer = document.getElementById('chatThumbsContainer');
+    const recDot = document.getElementById('recDot');
+    const clearChatBtn = document.getElementById('clearChatBtn');
+
+    let chatHistory = [];
+    let attachedImages = [];
+
+    function saveChatToStorage() {
+      try {
+        localStorage.setItem('sardev_chat_history', JSON.stringify(chatHistory));
+        localStorage.setItem('sardev_chat_html', chatMessages.innerHTML);
+      } catch (e) {
+        console.error("Gagal menyimpan riwayat chat:", e);
+      }
+    }
+
+    function loadChatFromStorage() {
+      try {
+        const savedHistory = localStorage.getItem('sardev_chat_history');
+        const savedHtml = localStorage.getItem('sardev_chat_html');
+        if (savedHistory && savedHtml) {
+          chatHistory = JSON.parse(savedHistory);
+          chatMessages.innerHTML = savedHtml;
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+      } catch (e) {
+        console.error("Gagal memuat riwayat chat:", e);
+      }
+    }
+
+    loadChatFromStorage();
+
+    // Auto-expand textarea height
+    chatInput.addEventListener('input', () => {
+      chatInput.style.height = 'auto';
+      chatInput.style.height = Math.min(chatInput.scrollHeight, 140) + 'px';
+    });
+
+    function toBase64(file) {
+      return new Promise((resolve, reject) => {
+        const r = new FileReader();
+        r.onload = () => resolve(r.result.split(',')[1]);
+        r.onerror = reject;
+        r.readAsDataURL(file);
+      });
+    }
+
+    chatImgBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      chatImgInput.click();
+    });
+
+    async function addChatImages(files) {
+      const imageFiles = Array.from(files || []).filter(file => file.type && file.type.startsWith('image/'));
+      for (const file of imageFiles) {
+        const b64 = await toBase64(file);
+        const url = URL.createObjectURL(file);
+        attachedImages.push({ base64: b64, mediaType: file.type || 'image/jpeg', name: file.name || `clipboard-${Date.now()}.png`, url });
+      }
+      renderAttachedThumbs();
+    }
+
+    chatImgInput.addEventListener('change', async () => {
+      await addChatImages(chatImgInput.files);
+      chatImgInput.value = '';
+    });
+
+    // Paste screenshot/image directly into chat, similar to modern AI chat UIs.
+    chatInput.addEventListener('paste', async (e) => {
+      const files = Array.from(e.clipboardData?.files || []).filter(file => file.type?.startsWith('image/'));
+      if (files.length) {
+        e.preventDefault();
+        await addChatImages(files);
+      }
+    });
+
+    const chatInputWrap = document.querySelector('.chat-input-wrap');
+    if (chatInputWrap) {
+      chatInputWrap.addEventListener('dragover', e => e.preventDefault());
+      chatInputWrap.addEventListener('drop', async e => {
+        e.preventDefault();
+        await addChatImages(e.dataTransfer?.files || []);
+      });
+    }
+
+    function renderAttachedThumbs() {
+      chatThumbsContainer.innerHTML = '';
+      if (attachedImages.length === 0) {
+        chatThumbsContainer.style.display = 'none';
+        return;
+      }
+      chatThumbsContainer.style.display = 'flex';
+      attachedImages.forEach((img, idx) => {
+        const item = document.createElement('div');
+        item.className = 'chat-thumb-item';
+        const el = document.createElement('img');
+        el.src = img.url;
+        const rm = document.createElement('button');
+        rm.className = 'chat-thumb-remove';
+        rm.innerHTML = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+        rm.type = 'button';
+        rm.addEventListener('click', (e) => {
+          e.preventDefault();
+          attachedImages.splice(idx, 1);
+          renderAttachedThumbs();
+        });
+        item.appendChild(el);
+        item.appendChild(rm);
+        chatThumbsContainer.appendChild(item);
+      });
+    }
+
+    // Template Click
+    document.querySelectorAll('.template-btn').forEach(btn => {
+      if (btn.id === 'clearChatBtn') return;
+      btn.addEventListener('click', () => {
+        const text = btn.textContent.trim();
+        let prompt = "";
+        if (text.includes("Ide video TikTok viral")) {
+          prompt = "Berikan 3 ide konsep video TikTok kreatif yang viral untuk mempromosikan produk kecantikan.";
+        } else if (text.includes("Copywriting promosi bundle")) {
+          prompt = "Tulis naskah copywriting pendek bertema soft-selling untuk mempromosikan paket bundle diskon skincare.";
+        } else if (text.includes("Naskah komedi skincare")) {
+          prompt = "Buat naskah video komedi pendek (durasi 1 menit) tentang seseorang yang salah menggunakan produk kecantikan milik pacarnya.";
+        } else if (text.includes("Penjelasan kandungan aktif")) {
+          prompt = "Bagaimana cara menjelaskan kandungan Lactic Acid dan Niacinamide kepada penonton awam agar terdengar menarik?";
+        }
+        chatInput.value = prompt;
+        sendChatMessage();
+      });
+    });
+
+    clearChatBtn.addEventListener('click', () => {
+      chatHistory = [];
+      attachedImages = [];
+      renderAttachedThumbs();
+      try {
+        localStorage.removeItem('sardev_chat_history');
+        localStorage.removeItem('sardev_chat_html');
+      } catch (e) {}
+      chatMessages.innerHTML = `
+    <div class="chat-row ai">
+      <div class="chat-avatar">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg>
+        Sardev AI
       </div>
-    `;
-    card.appendChild(head);
-
-    const body = document.createElement('div');
-    body.className = 'scene-body';
-
-    const imgField = fieldBlock('Prompt Gambar (Text-to-Image)', scene.image_prompt, true);
-    const previewBtn = document.createElement('button');
-    previewBtn.className = 'img-preview-btn';
-    previewBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Generate Preview Gambar (gratis, di sini)`;
-    previewBtn.addEventListener('click', () => {
-      const img = document.createElement('img');
-      img.className = 'scene-image';
-      img.src = `https://image.pollinations.ai/prompt/${encodeURIComponent(scene.image_prompt)}?width=576&height=1024&nologo=true`;
-      previewBtn.replaceWith(img);
+      <div class="chat-bubble">Halo Boss! Riwayat chat sudah dibersihkan. Ada yang bisa saya bantu hari ini?</div>
+    </div>`;
     });
-    imgField.appendChild(previewBtn);
-    imgField.appendChild(quickLaunchRow(scene));
-    body.appendChild(imgField);
 
-    const vidField = fieldBlock('Prompt Video (Image-to-Video)', scene.video_prompt, true);
-    body.appendChild(vidField);
+    // Click Send
+    chatSendBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      sendChatMessage();
+    });
 
-    if(scene.dialog){
-      body.appendChild(fieldBlock('Dialog', scene.dialog));
+    // Enter key binding
+    chatInput.addEventListener('keydown', (e) => {
+      if ((e.key === 'Enter' || e.keyCode === 13) && !e.shiftKey) {
+        e.preventDefault();
+        sendChatMessage();
+      }
+    });
+
+    async function sendChatMessage() {
+      const text = chatInput.value.trim();
+      if (!text && attachedImages.length === 0) {
+        chatInput.focus();
+        return;
+      }
+
+      const currentImgs = [...attachedImages];
+
+      // Render user bubble
+      appendUserBubble(text, currentImgs);
+
+      chatInput.value = '';
+      chatInput.style.height = '46px';
+      attachedImages = [];
+      renderAttachedThumbs();
+      chatSendBtn.disabled = true;
+      chatInput.focus();
+
+      // Construct message text for API payload
+      let payloadText = text;
+      if (currentImgs.length > 0) {
+        if (!payloadText) {
+          payloadText = "Tolong analisa dan berikan tanggapan untuk gambar yang saya unggah ini, Boss.";
+        }
+        payloadText += `\n[Lampiran Gambar User: ` + currentImgs.map(i => i.name).join(', ') + `]`;
+      }
+
+      // Simpan history versi teks untuk UI/localStorage. Gambar hanya dikirim
+      // pada request aktif agar localStorage tidak penuh oleh base64 besar.
+      chatHistory.push({ role: 'user', content: payloadText });
+      saveChatToStorage();
+
+      const historyBeforeCurrent = chatHistory.slice(0, -1);
+      const currentUserContent = [{ type: 'text', text: payloadText }];
+      currentImgs.forEach(img => {
+        currentUserContent.push({
+          type: 'image_url',
+          image_url: { url: `data:${img.mediaType};base64,${img.base64}` },
+          filename: img.name
+        });
+      });
+
+      const aiRow = createAiRow();
+      const aiBubble = aiRow.querySelector('.chat-bubble');
+      aiBubble.textContent = 'Sedang memikirkan jawaban...';
+
+      if (recDot) {
+        recDot.classList.remove('idle');
+        recDot.classList.add('live');
+      }
+
+      try {
+        const response = await fetch(API_BASE + '/v1/chat/completions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: 'deepseek-chat',
+            search: false,
+            messages: [
+              { role: 'system', content: 'Anda adalah Sardev AI, asisten kecerdasan buatan multimodal yang cerdas, ramah, dan kreatif. Anda dikembangkan dan diciptakan oleh Muhamad Satria. Selalu panggil pengguna dengan sebutan "Boss" secara natural. Jika pengguna mengirim gambar, gambar tersebut benar-benar dilampirkan ke DeepSeek Web: analisis isi visual yang terlihat secara langsung, termasuk objek, produk, karakter, warna, teks yang terbaca, komposisi, dan detail relevan. Jangan berpura-pura melihat detail yang tidak tampak. Jika pengguna bertanya siapa yang membuat, mengembangkan, atau menciptakan Anda, selalu jawab bahwa Anda diciptakan dan dikembangkan oleh Muhamad Satria.' },
+              ...historyBeforeCurrent,
+              { role: 'user', content: currentUserContent }
+            ]
+          })
+        });
+
+        const data = await response.json();
+        if (!response.ok || data.error) {
+          throw new Error(data.error?.message || data.error || `HTTP error! status: ${response.status}`);
+        }
+
+        const reply = data.choices[0].message.content.trim();
+        chatHistory.push({ role: 'assistant', content: reply });
+
+        // Typewriter streaming effect
+        await typeWriterEffect(aiBubble, formatMarkdownText(reply));
+
+      } catch (err) {
+        console.error(err);
+        aiRow.className = 'chat-row error';
+        aiBubble.textContent = 'Gagal mengirim pesan: ' + err.message;
+      } finally {
+        chatSendBtn.disabled = false;
+        if (recDot) {
+          recDot.classList.remove('live');
+          recDot.classList.add('idle');
+        }
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        saveChatToStorage();
+      }
     }
-    if(scene.voice_desc){
-      body.appendChild(fieldBlock('Deskripsi Suara', scene.voice_desc));
+
+    function appendUserBubble(text, images) {
+      const row = document.createElement('div');
+      row.className = 'chat-row user';
+
+      const avatar = document.createElement('div');
+      avatar.className = 'chat-avatar';
+      avatar.innerHTML = `
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    Boss`;
+      row.appendChild(avatar);
+
+      const bubble = document.createElement('div');
+      bubble.className = 'chat-bubble';
+
+      if (images && images.length > 0) {
+        const imgContainer = document.createElement('div');
+        imgContainer.className = 'chat-bubble-imgs';
+        images.forEach(img => {
+          const el = document.createElement('img');
+          el.src = img.url;
+          el.className = 'chat-bubble-img';
+          imgContainer.appendChild(el);
+        });
+        bubble.appendChild(imgContainer);
+      }
+
+      if (text) {
+        const txtEl = document.createElement('div');
+        txtEl.textContent = text;
+        bubble.appendChild(txtEl);
+      }
+
+      row.appendChild(bubble);
+      chatMessages.appendChild(row);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
     }
-    body.appendChild(fieldBlock('SFX', scene.sfx));
-    body.appendChild(fieldBlock('BGM / Mood', scene.bgm));
 
-    card.appendChild(body);
-    cardContainer.appendChild(card);
-  });
+    function createAiRow() {
+      const row = document.createElement('div');
+      row.className = 'chat-row ai';
 
-  const cta = document.createElement('div');
-  cta.className = 'cta-block';
-  cta.appendChild(fieldBlock('Call To Action', plan.cta, true));
-  cta.appendChild(fieldBlock('Prompt Thumbnail', plan.thumbnail_prompt, true));
-  cardContainer.appendChild(cta);
-}
-</script>
+      const avatar = document.createElement('div');
+      avatar.className = 'chat-avatar';
+      avatar.innerHTML = `
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg>
+    Sardev AI`;
+      row.appendChild(avatar);
+
+      const bubble = document.createElement('div');
+      bubble.className = 'chat-bubble';
+      row.appendChild(bubble);
+
+      chatMessages.appendChild(row);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      return row;
+    }
+
+    // Typewriter Streaming Simulation
+    function typeWriterEffect(element, fullHtml) {
+      return new Promise((resolve) => {
+        element.innerHTML = '';
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = fullHtml;
+        const textContent = tempDiv.innerHTML;
+
+        let index = 0;
+        const speed = 12; // ms per word/chunk
+        const words = textContent.split(' ');
+
+        function type() {
+          if (index < words.length) {
+            element.innerHTML = words.slice(0, index + 1).join(' ');
+            index++;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            setTimeout(type, speed);
+          } else {
+            element.innerHTML = fullHtml;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            resolve();
+          }
+        }
+        type();
+      });
+    }
+
+    function formatMarkdownText(text) {
+      let html = text.replace(/\n/g, '<br>');
+      html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      html = html.replace(/^[•*-]\s(.*?)(<br>|$)/gm, '<li>$1</li>');
+      if (html.includes('<li>')) {
+        html = html.replace(/(<li>.*?<\/li>)+/g, '<ul>$&</ul>');
+      }
+      return html;
+    }
+  </script>
 </body>
+
 </html>
