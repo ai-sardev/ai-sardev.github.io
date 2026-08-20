@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sardev Studio - AI Chatbot</title>
+  <title>Sardev AI Chatbot - Asisten AI Multimodal</title>
+  <meta name="description" content="Asisten Sardev AI multimodal berbasis tampilan ChatGPT dan estetika Apple. Jawab pertanyaan, analisis gambar, dan bantu berbagai kebutuhan Boss.">
   <link rel="stylesheet" href="token.css">
   <style>
     :root,
@@ -606,6 +607,253 @@
       background: var(--border-color);
       border-radius: 4px;
     }
+  
+    /* =========================================================
+       MOBILE RESPONSIVE FIX
+       - Sidebar off-canvas
+       - Sidebar hidden by default on mobile
+       - Full-width chat
+       - Compact mobile composer
+       ========================================================= */
+    @media (max-width: 900px) {
+      html,
+      body {
+        width: 100%;
+        height: 100dvh;
+        min-height: 100dvh;
+        overflow: hidden;
+      }
+
+      .app {
+        width: 100%;
+        height: 100dvh;
+        min-height: 100dvh;
+        flex-direction: row;
+        overflow: hidden;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: min(86vw, 320px);
+        height: 100dvh;
+        padding: 18px 16px;
+        gap: 14px;
+        border-right: 1px solid var(--border-color);
+        border-bottom: none;
+        overflow-y: auto;
+        overflow-x: hidden;
+        z-index: 1000;
+        opacity: 1;
+        transform: translateX(0);
+        box-shadow: 12px 0 36px rgba(0, 0, 0, 0.14);
+        transition:
+          transform 0.28s cubic-bezier(0.28, 0.11, 0.32, 1),
+          opacity 0.22s ease;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .app.sidebar-collapsed .sidebar {
+        width: min(86vw, 320px);
+        height: 100dvh;
+        padding: 18px 16px;
+        border-right: 1px solid var(--border-color);
+        border-bottom: none;
+        opacity: 0;
+        transform: translateX(-105%);
+        pointer-events: none;
+      }
+
+      .main-chat {
+        width: 100%;
+        min-width: 0;
+        height: 100dvh;
+        flex: 1 1 auto;
+      }
+
+      .floating-sidebar-open {
+        position: fixed;
+        top: max(10px, env(safe-area-inset-top));
+        left: 12px;
+        width: 38px;
+        height: 38px;
+        z-index: 1100;
+        border-radius: 12px;
+      }
+
+      .chat-header,
+      .app.sidebar-collapsed .chat-header {
+        min-height: 64px;
+        padding: 11px 14px 11px 62px;
+        justify-content: center;
+        gap: 2px;
+      }
+
+      .chat-header h2 {
+        font-size: 16px;
+        line-height: 1.25;
+      }
+
+      .chat-header span {
+        max-width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-size: 11px;
+      }
+
+      .chat-messages {
+        min-height: 0;
+        padding: 16px 12px;
+        gap: 14px;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .chat-row {
+        max-width: 94%;
+      }
+
+      .chat-avatar {
+        margin-bottom: 5px;
+        font-size: 11px;
+      }
+
+      .chat-bubble {
+        padding: 12px 14px;
+        border-radius: 16px;
+        font-size: 14px;
+        line-height: 1.55;
+        overflow-wrap: anywhere;
+      }
+
+      .chat-bubble-imgs {
+        gap: 6px;
+      }
+
+      .chat-bubble-img {
+        width: auto;
+        max-width: min(72vw, 220px);
+        max-height: 240px;
+      }
+
+      .chat-input-area {
+        position: relative;
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+
+      .chat-thumbs-container {
+        padding: 10px 12px 0;
+        gap: 8px;
+      }
+
+      .chat-thumb-item {
+        width: 54px;
+        height: 54px;
+        border-radius: 10px;
+      }
+
+      .chat-input-wrap {
+        width: 100%;
+        padding: 10px 12px 12px;
+        gap: 8px;
+        align-items: flex-end;
+      }
+
+      .chat-img-btn {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+      }
+
+      .chat-input {
+        min-width: 0;
+        min-height: 42px;
+        max-height: 120px;
+        padding: 10px 12px;
+        border-radius: 14px;
+        font-size: 16px; /* mencegah auto-zoom iOS */
+        line-height: 1.35;
+      }
+
+      .chat-send-btn {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        padding: 0;
+        border-radius: 50%;
+      }
+
+      .chat-send-btn span {
+        display: none;
+      }
+
+      .file-warning {
+        padding: 8px 12px;
+        font-size: 11px;
+      }
+
+      .nav-tabs {
+        flex-shrink: 0;
+      }
+
+      .launch-btn {
+        min-height: 40px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .sidebar,
+      .app.sidebar-collapsed .sidebar {
+        width: min(88vw, 310px);
+      }
+
+      .sidebar {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .brand h1 {
+        font-size: 18px;
+      }
+
+      .chat-row {
+        max-width: 96%;
+      }
+
+      .chat-messages {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .chat-input-wrap {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .chat-img-btn,
+      .chat-send-btn {
+        width: 40px;
+        min-width: 40px;
+        height: 40px;
+      }
+
+      .chat-input {
+        min-height: 40px;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .chat-header,
+      .app.sidebar-collapsed .chat-header {
+        padding-left: 58px;
+      }
+    }
+
   </style>
 </head>
 
@@ -737,7 +985,7 @@
           <line x1="12" y1="17" x2="12.01" y2="17" />
         </svg>
         <span><strong>Peringatan:</strong> Anda membuka file secara langsung (file://). Mohon akses aplikasi melalui
-          <code>https://ai.sardev.biz.id/chat.html</code> agar backend API berjalan lancar.</span>
+          <code>https://ai-sardev.github.io/</code> agar backend API berjalan lancar.</span>
       </div>
 
       <div class="chat-header">
@@ -813,19 +1061,66 @@
       localStorage.setItem('sardev-theme', next);
     });
 
+    const MOBILE_BREAKPOINT = 900;
+
+    function isMobileLayout() {
+      return window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`).matches;
+    }
+
+    function setSidebarCollapsed(collapsed, persistDesktop = true) {
+      appEl.classList.toggle('sidebar-collapsed', collapsed);
+
+      // Di mobile sidebar selalu mulai tertutup setiap halaman dibuka.
+      // Preferensi localStorage tetap dipakai untuk layout desktop.
+      if (persistDesktop && !isMobileLayout()) {
+        localStorage.setItem('sardev-sidebar-collapsed', collapsed ? 'true' : 'false');
+      }
+    }
+
     function initSidebar() {
+      if (isMobileLayout()) {
+        // Default mobile: sidebar hidden, seperti layout chatbot modern.
+        setSidebarCollapsed(true, false);
+        return;
+      }
+
       const isCollapsed = localStorage.getItem('sardev-sidebar-collapsed') === 'true';
-      if (isCollapsed) appEl.classList.add('sidebar-collapsed');
+      setSidebarCollapsed(isCollapsed, false);
     }
 
     sidebarToggleBtn.addEventListener('click', () => {
-      appEl.classList.toggle('sidebar-collapsed');
-      localStorage.setItem('sardev-sidebar-collapsed', appEl.classList.contains('sidebar-collapsed'));
+      setSidebarCollapsed(true);
     });
 
     sidebarOpenBtn.addEventListener('click', () => {
-      appEl.classList.remove('sidebar-collapsed');
-      localStorage.setItem('sardev-sidebar-collapsed', 'false');
+      setSidebarCollapsed(false);
+    });
+
+    // Saat sidebar terbuka sebagai drawer di mobile, tap area chat untuk menutupnya.
+    const mainChatEl = document.querySelector('.main-chat');
+    if (mainChatEl) {
+      mainChatEl.addEventListener('click', (event) => {
+        if (
+          isMobileLayout() &&
+          !appEl.classList.contains('sidebar-collapsed') &&
+          !event.target.closest('.floating-sidebar-open')
+        ) {
+          setSidebarCollapsed(true, false);
+        }
+      });
+    }
+
+    // Jika berpindah dari desktop ke ukuran mobile, langsung sembunyikan sidebar.
+    let lastMobileState = isMobileLayout();
+    window.addEventListener('resize', () => {
+      const nowMobile = isMobileLayout();
+      if (nowMobile && !lastMobileState) {
+        setSidebarCollapsed(true, false);
+      } else if (!nowMobile && lastMobileState) {
+        const desktopCollapsed = localStorage.getItem('sardev-sidebar-collapsed') === 'true';
+        setSidebarCollapsed(desktopCollapsed, false);
+      }
+      lastMobileState = nowMobile;
     });
 
     initTheme();
